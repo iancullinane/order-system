@@ -39,15 +39,21 @@ if (loadedStates.includes(document.readyState) && document.body) {
  * Load your route specific JS when needed
  */
 function determinePath() {
-
+	var routes_map = {
+		'/':		 		() => { launch(urlTokens) },
+	}
+	
 	let urlTokens = window.location.pathname.match(/[^\/]+/g);		
+	console.log(urlTokens);
+
+	console.log("more happened");
 	urlTokens !== null 
 		? routes_map["/" + urlTokens[0]]() 
 		: routes_map["/"]();
 
-	var routes_map = {
-		'/':		 		() => { launch(urlTokens) },
-	}
+
+
+	
 }
 
 /**
