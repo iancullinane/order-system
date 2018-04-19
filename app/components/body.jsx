@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
-import Typography from 'material-ui/Typography';
+
 
 import test_data from 'test/test-data';
-import SimpleTable from 'components/table';
+// import SimpleTable from 'components/table';
 
 const styles = theme => ({
   root: {
@@ -20,20 +20,15 @@ const styles = theme => ({
   },
 });
 
-function FullWidthGrid(props) {
+function PaperTemplate(props) {
   const { classes } = props;
 
   return (
     <div className={classes.root}>
       <Grid container spacing={24}>
-        <Grid item xs={12}>
+        <Grid item xs={props.size}>
           <Paper className={classes.paper}>
-            <Typography variant="headline" gutterBottom>
-              Orders Pending
-            </Typography>
-
-            <SimpleTable />
-
+            {props.children}
           </Paper>
 
         </Grid>
@@ -42,8 +37,8 @@ function FullWidthGrid(props) {
   );
 }
 
-FullWidthGrid.propTypes = {
+PaperTemplate.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(FullWidthGrid);
+export default withStyles(styles)(PaperTemplate);

@@ -1,17 +1,22 @@
-
+// react
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+// vendors
+import Typography from 'material-ui/Typography';
 
-
+// source
 import NavBar from 'components/navbar';
-import FullWidthGrid from 'components/body';
+import SignUpUser from 'utils/aws-user';
+import PaperTemplate from 'components/body';
+import SimpleTable from 'components/table';
 
 
 class PestoApp extends Component {
 
     constructor(props){
         super(props);
+        SignUpUser()
         // this.initialPageLoad();
     }
 
@@ -27,7 +32,13 @@ class PestoApp extends Component {
         return(
             <div>
                 <NavBar /> 
-                <FullWidthGrid />
+                <PaperTemplate size={12}>
+                    <Typography variant="headline" gutterBottom>
+                        Orders Pending
+                    </Typography>
+                    <SimpleTable />
+
+                </PaperTemplate>
             </div>            
         )
     }
