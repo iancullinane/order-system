@@ -20,7 +20,20 @@ const styles = theme => ({
   },
 });
 
-function PaperTemplate(props) {
+
+function GridWrapperComponent(props){
+  const { classes } = props;
+  
+  return (
+    <div className={classes.root}>
+      <Grid container spacing={24}>
+        {props.children}
+      </Grid>
+    </div>
+  )
+}
+
+function PaperTemplateComponent(props) {
   const { classes } = props;
 
   return (
@@ -37,8 +50,22 @@ function PaperTemplate(props) {
   );
 }
 
-PaperTemplate.propTypes = {
+PaperTemplateComponent.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PaperTemplate);
+GridWrapperComponent.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+
+const GridWrapper = withStyles(styles)(GridWrapperComponent);
+const PaperTemplate = withStyles(styles)(PaperTemplateComponent);
+
+export {
+  GridWrapper,
+  PaperTemplate
+};
+
+
+// export withStyles(styles)(PaperTemplate);

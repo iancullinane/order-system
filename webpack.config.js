@@ -7,7 +7,7 @@ module.exports = {
   entry: './app/index.jsx',
   devtool: 'source-map',
   devServer: {
-    contentBase: './',
+    contentBase: './dist/',
     hot: true
   },
   resolve: {

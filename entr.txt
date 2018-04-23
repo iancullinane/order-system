@@ -1,0 +1,1 @@
+find -E ./ -regex ".*\.(jsx)" | entr webpack

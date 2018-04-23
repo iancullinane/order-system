@@ -29,7 +29,7 @@ attributeList.push(attributePhoneNumber);
 
 
 export default function SignUpUser(){
-    userPool.signUp('username', 'password', attributeList, null, function(err, result){
+    userPool.signUp(dataEmail.Value, '!Password1', attributeList, null, function(err, result){
         if (err) {
             alert(err.message || JSON.stringify(err));
             return;
