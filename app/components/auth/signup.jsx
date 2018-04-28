@@ -45,13 +45,17 @@ const styles = theme => ({
   }
 });
 
-class Login extends React.Component {
+class Signup extends React.Component {
   
   constructor(props){
     super(props);
     this.state = {
       email: '',
       password: '',
+      password_confirm: '',
+      vendor_name: '',
+      address: '',
+      phone_number: '',
     };
   };
   
@@ -92,13 +96,53 @@ class Login extends React.Component {
           inputProps={{
             'aria-label': 'Description',
           }}
-        />       
+        />
+        <Input
+          placeholder="Repeat Password"
+          className={classes.input}
+          type={"password"}
+          value={this.state.password_confirm}
+          onChange={this.handleChange('password_confirm')}
+          inputProps={{
+            'aria-label': 'Description',
+          }}
+        />
+        <Input
+          placeholder="Name of Business"
+          className={classes.input}
+          type={"type"}
+          value={this.state.vendor_name}
+          onChange={this.handleChange('vendor_name')}
+          inputProps={{
+            'aria-label': 'Description',
+          }}
+        />
+        <Input
+          placeholder="Address"
+          className={classes.input}
+          type={"type"}
+          value={this.state.address}
+          onChange={this.handleChange('address')}
+          inputProps={{
+            'aria-label': 'Description',
+          }}
+        />
+        <Input
+          placeholder="Phone Number"
+          className={classes.input}
+          type={"type"}
+          value={this.state.phone_number}
+          onChange={this.handleChange('phone_number')}
+          inputProps={{
+            'aria-label': 'Description',
+          }}
+        />        
         <div className={classes.center}>
           <Button 
           variant="raised" 
           className={classes.button}
           onClick={this.printState}>
-            Login
+            Register
           </Button>
         </div>
       </Paper>
@@ -106,11 +150,11 @@ class Login extends React.Component {
   }
 }
 
-Login.propTypes = {
+Signup.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Login);
+export default withStyles(styles)(Signup);
 
 
 
