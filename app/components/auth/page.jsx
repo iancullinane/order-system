@@ -56,14 +56,14 @@ class LoginPage extends React.Component {
     let user = new AwsUser();
   
     if(this.state.password === this.state.password_confirm){
+      
       const result = await user.SignUpUser(
         this.state.email, 
         this.state.password,
         this.state.address,
         this.state.vendor_name,
-      ).then(x => console.log(x));
+      ).catch((err)=>{ console.log(err)} );
       
-      // console.log(result);
     } else {
       this.setState({error: "Passwords don't match"});
     }

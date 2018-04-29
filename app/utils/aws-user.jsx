@@ -46,19 +46,35 @@ export default class AwsUser {
         attributeList.push(attributeAddress);
         attributeList.push(attributeVendorName);
     
-        userPool.signUp(dataEmail.Value, password, attributeList, null, (err, result)=>{
-            return new Promise((resolve, reject)=>{
-                if (err) {
-                    // alert(err.message || JSON.stringify(err));
+
+        return new Promise((resolve, reject)=>{
+            userPool.signUp(dataEmail.Value, password, attributeList, null, (err, result)=>{
+                if(err){
                     reject(err);
                 }
-                return resolve(result.user);
-            })
-            
-            console.log('user name is ' + cognitoUser.getUsername());
-            
+                resolve(result);
+            });    
         });
+
+
+
+
     }
 }
 
+
+
+
+// userPool.signUp(dataEmail.Value, password, attributeList, null, (err, result)=>{
+//     return new Promise((resolve, reject)=>{
+//         if (err) {
+//             // alert(err.message || JSON.stringify(err));
+//             reject(err);
+//         }
+//         return resolve({result: result.user, err: err});
+//     })
+    
+//     // console.log('user name is ' + cognitoUser.getUsername());
+    
+// });
     
