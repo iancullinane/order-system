@@ -133,7 +133,7 @@ function Signup(props) {
         </Button>
         {props.error 
           ? <Typography>
-              {props.error}
+              {props.error.code}
             </Typography>
           : null
         }

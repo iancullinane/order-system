@@ -15,6 +15,21 @@ export default class AwsUser {
 
 
 
+    ConfirmUser(cognitoUser, validationCode){
+
+        return new Promise((resolve, reject)=>{
+            cognitoUser.confirmRegistration(validationCode, true, function(err, result) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                console.log('call result: ' + result);
+            });  
+        });
+
+    }
+
+
 
     
     SignUpUser(email, password, address, vendor_name){
@@ -50,15 +65,12 @@ export default class AwsUser {
         return new Promise((resolve, reject)=>{
             userPool.signUp(dataEmail.Value, password, attributeList, null, (err, result)=>{
                 if(err){
+                    console.log(err);
                     reject(err);
                 }
                 resolve(result);
             });    
         });
-
-
-
-
     }
 }
 

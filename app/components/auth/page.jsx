@@ -16,7 +16,7 @@ import RegistrationForm from 'components/auth/register'
 import Signup from 'components/auth/signup'
 import Login from 'components/auth/login'
 import AwsUser from 'utils/aws-user';
-import enterCode from './enter-code';
+import EnterCode from './enter-code';
 
 const styles = {
   root: {
@@ -47,6 +47,8 @@ class LoginPage extends React.Component {
       phone_number: '',
       error: null,
       waitForConfirmation: false,
+      cognitoUser: null,
+      
     };
   }
 
@@ -62,16 +64,41 @@ class LoginPage extends React.Component {
         this.state.password,
         this.state.address,
         this.state.vendor_name,
-      ).catch((err)=>{ console.log(err)} );
+      ).then((result)=>{
+        
+        this.setState(
+          {
+            waitForConfirmation: true,
+            cognitoUser: result.user}
+          );
+        console.log(`registered`);
+      }).catch((err)=>{ 
+        this.setState({error: err});
+      });
       
     } else {
       this.setState({error: "Passwords don't match"});
     }
   }
   
-  toggleConfirmation(){
-    this.setState({waitForConfirmation: true});
+  async confirmUser(){
+    console.log(this.state);
+  
+    let user = new AwsUser();  
+    const result = await user.ConfirmUser(
+      this.state.cognitoUser, 
+      this.state.validation_code
+    ).then((result)=>{
+      console.log(`registered`);
+    }).catch((err)=>{ 
+      console.log(err.code);
+    });
+      
   }
+
+  // toggleConfirmation(){
+  //   this.setState({waitForConfirmation: true});
+  // }
 
   handleChange = prop => event => {
     this.setState({ [prop]: event.target.value });
@@ -85,7 +112,10 @@ class LoginPage extends React.Component {
         {this.state.waitForConfirmation 
           ? <Grid container alignContent={"center"} justify={"center"} className={classes.root} spacing={16}>
               <Grid item xs={5}>
-                <EnterCode />
+                <EnterCode 
+                  registerFunction={this.confirmUser.bind(this)} 
+                  handleChange={this.handleChange.bind(this)}
+                />
               </Grid>
             </Grid>
 
@@ -98,7 +128,6 @@ class LoginPage extends React.Component {
                   {...this.state}
                   signUpUser={this.signUpUser.bind(this)}
                   onChange={this.handleChange.bind(this)} 
-                  toggleConfirmation={this.toggleConfirmation.bind(this)}  
                 /> 
               </Grid>
             </Grid>
