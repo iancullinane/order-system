@@ -10,8 +10,12 @@ import Typography from 'material-ui/Typography';
 import NavBar from 'components/navbar';
 import SignUpUser from 'utils/aws-user';
 import PaperTemplate from 'components/body';
-import LoginBox from 'components/auth/login';
+import LoginPage from 'components/auth/page';
 import SimpleTable from 'components/table';
+
+import "components/styles/styles.scss"
+
+
 
 
 class PestoApp extends Component {
@@ -63,14 +67,16 @@ class PestoApp extends Component {
 
     render(){
 
+        let loggedIn = localStorage.getItem("loggedin")
 
         return(            
-            <div>
-                <NavBar /> 
-                {this.state.authorized
+            <div id={"root"}>
+                <NavBar />
+                {loggedIn
                     ? <SimpleTable />
-                    : <LoginBox />
+                    : <LoginPage /> 
                 }
+                
             </div>
         )
     }

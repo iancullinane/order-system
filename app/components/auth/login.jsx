@@ -13,6 +13,7 @@ import Grid from 'material-ui/Grid';
 // Src
 import { PaperTemplate, GridWrapper } from 'components/body';
 import { Paper } from 'material-ui';
+import SignUpUser from 'utils/aws-user';
 
 
 const styles = theme => ({
@@ -54,10 +55,15 @@ class Login extends React.Component {
       password: '',
     };
   };
-  
+
+  // someFunction(something){};  
+
 
   printState = () => {
     console.log(this.state);
+    
+    // console.log(err);
+    // SignUpUser(this.state.email, this.state.password, '781-775-8050')
   }
 
   handleChange = prop => event => {

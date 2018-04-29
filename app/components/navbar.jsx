@@ -17,6 +17,9 @@ const styles = {
   flex: {
     flex: 1,
   },
+  navbar:{
+    marginBottom: "100px",
+  },
   menuButton: {
     marginLeft: -12,
     marginRight: 20,
@@ -26,8 +29,7 @@ const styles = {
 function NavBar(props) {
   const { classes } = props;
   return (
-    <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar className={classes.navbar} position="fixed">
         <Toolbar>
           <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
             <Icon className={classes.icon} color="action" style={{ fontSize: 30 }}>
@@ -40,7 +42,6 @@ function NavBar(props) {
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
-    </div>
   );
 }
 

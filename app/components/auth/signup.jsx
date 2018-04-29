@@ -13,7 +13,7 @@ import Grid from 'material-ui/Grid';
 // Src
 import { PaperTemplate, GridWrapper } from 'components/body';
 import { Paper } from 'material-ui';
-
+import AwsUser from 'utils/aws-user';
 
 const styles = theme => ({
   root: {
@@ -42,38 +42,25 @@ const styles = theme => ({
   input: {
     width: "100%",
     marginBottom: "15px",
+  },
+  submitRow: {
+    flexDirection: "row",
   }
+
 });
 
-class Signup extends React.Component {
-  
-  constructor(props){
-    super(props);
-    this.state = {
-      email: '',
-      password: '',
-      password_confirm: '',
-      vendor_name: '',
-      address: '',
-      phone_number: '',
-    };
-  };
-  
+var poolData = {
+  UserPoolId : 'us-east-2_SqPWkjFhx', // Your user pool id here
+  ClientId : '5e86924ighs70itck1816rajbi' // Your client id here
+};
 
-  printState = () => {
-    console.log(this.state);
-  }
+// 
 
-  handleChange = prop => event => {
-    this.setState({ [prop]: event.target.value });
-  };
+function Signup(props) {
+  const { classes } = props;
 
-  render(){
-
-    const { classes } = this.props;
-    
-    return (
-      <Paper className={classes.paper}>
+  return (
+    <Paper className={classes.paper}>
         <Typography>
             Signup
         </Typography>
@@ -81,8 +68,8 @@ class Signup extends React.Component {
           placeholder="Email"
           className={classes.input}
           type={"text"}
-          value={this.state.email}
-          onChange={this.handleChange('email')}
+          value={props.email}
+          onChange={props.onChange('email')}
           inputProps={{
             'aria-label': 'Description',
           }}
@@ -91,8 +78,8 @@ class Signup extends React.Component {
           placeholder="Password"
           className={classes.input}
           type={"password"}
-          value={this.state.password}
-          onChange={this.handleChange('password')}
+          value={props.password}
+          onChange={props.onChange('password')}
           inputProps={{
             'aria-label': 'Description',
           }}
@@ -101,8 +88,8 @@ class Signup extends React.Component {
           placeholder="Repeat Password"
           className={classes.input}
           type={"password"}
-          value={this.state.password_confirm}
-          onChange={this.handleChange('password_confirm')}
+          value={props.password_confirm}
+          onChange={props.onChange('password_confirm')}
           inputProps={{
             'aria-label': 'Description',
           }}
@@ -111,8 +98,8 @@ class Signup extends React.Component {
           placeholder="Name of Business"
           className={classes.input}
           type={"type"}
-          value={this.state.vendor_name}
-          onChange={this.handleChange('vendor_name')}
+          value={props.vendor_name}
+          onChange={props.onChange('vendor_name')}
           inputProps={{
             'aria-label': 'Description',
           }}
@@ -121,8 +108,8 @@ class Signup extends React.Component {
           placeholder="Address"
           className={classes.input}
           type={"type"}
-          value={this.state.address}
-          onChange={this.handleChange('address')}
+          value={props.address}
+          onChange={props.onChange('address')}
           inputProps={{
             'aria-label': 'Description',
           }}
@@ -131,24 +118,29 @@ class Signup extends React.Component {
           placeholder="Phone Number"
           className={classes.input}
           type={"type"}
-          value={this.state.phone_number}
-          onChange={this.handleChange('phone_number')}
+          value={props.phone_number}
+          onChange={props.onChange('phone_number')}
           inputProps={{
             'aria-label': 'Description',
           }}
         />        
-        <div className={classes.center}>
-          <Button 
+        
+        <Button 
           variant="raised" 
           className={classes.button}
-          onClick={this.printState}>
-            Register
-          </Button>
-        </div>
+          onClick={props.signUpUser}>
+            Register User
+        </Button>
+        {props.error 
+          ? <Typography>
+              {props.error}
+            </Typography>
+          : null
+        }
+        
       </Paper>
-    );
-  }
-}
+  )};
+
 
 Signup.propTypes = {
   classes: PropTypes.object.isRequired,

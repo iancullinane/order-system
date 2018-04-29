@@ -6,6 +6,7 @@ const webpack = require('webpack');
 module.exports = {
   entry: './app/index.jsx',
   devtool: 'source-map',
+  watch: true,
   devServer: {
     contentBase: './dist/',
     hot: true
@@ -19,7 +20,7 @@ module.exports = {
   },
   module:{
     loaders:[{
-        test:/\.(s*)css$/,
+        test:/\.scss$/,
         // the are used in reverse order, output of sass-loader->css-loader->
         // stlye->loader injects it into the html
         use:['style-loader','css-loader', 'sass-loader']
@@ -32,7 +33,7 @@ module.exports = {
             query: {
               // If you set something here, also set it in .babelrc
               presets: ['es2016', 'react'],
-              plugins: ['transform-class-properties']
+              plugins: ['transform-class-properties','syntax-async-functions']
           }
         }
       }]
@@ -42,6 +43,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Pesto',
       template: './app/index-template.html',
+      inject: true,
     }),
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin()

@@ -14,46 +14,61 @@ import Grid from 'material-ui/Grid';
 
 
 
-function RegistrationForm(props) {
+class RegistrationForm extends React.Component {
   
-  return (
-      <form>
-        <FormControl>
-            <InputLabel>Email Address</InputLabel>
-            <Input
-            placeholder={"123 Basil Rd"}
-            />
-        </FormControl>
-        
-        <FormControl>
-            <InputLabel>Password</InputLabel>
-            <Input
-            placeholder={"123 Basil Rd"}
-            />
-        </FormControl>
+    constructor(props){
+        super(props);
+    }
 
-        <FormControl>
-            <InputLabel>You company address</InputLabel>
-            <Input
-            placeholder={"123 Basil Rd"}
-            />
-        </FormControl>
+    signUpUser = () => {
+        console.log(this.state);
+        SignUpUser(this.state.email);
+        // console.log(err);
+        // SignUpUser(this.state.email, this.state.password, '781-775-8050')
+      }
 
-        <FormControl fullWidth >
-            <InputLabel>Vendor Name</InputLabel>
-            <Input
-            placeholder={"Your company name"}
-            />
-        </FormControl>
+    render(){
 
-        <FormControl fullWidth >
-            <InputLabel>You company address</InputLabel>
-            <Input
-            placeholder={"123 Basil Rd"}
-            />
-        </FormControl>
-    </form>
-  )
+        return (
+            <form>
+              <FormControl>
+                  <InputLabel>Email Address</InputLabel>
+                  <Input
+                  placeholder={"123 Basil Rd"}
+                  />
+              </FormControl>
+              
+              <FormControl>
+                  <InputLabel>Password</InputLabel>
+                  <Input
+                  placeholder={"123 Basil Rd"}
+                  />
+              </FormControl>
+      
+              <FormControl>
+                  <InputLabel>You company address</InputLabel>
+                  <Input
+                  placeholder={"123 Basil Rd"}
+                  />
+              </FormControl>
+      
+              <FormControl fullWidth >
+                  <InputLabel>Vendor Name</InputLabel>
+                  <Input
+                  placeholder={"Your company name"}
+                  />
+              </FormControl>
+      
+              <FormControl fullWidth >
+                  <InputLabel>You company address</InputLabel>
+                  <Input
+                    placeholder={"123 Basil Rd"}
+                  />
+              </FormControl>
+          </form>
+        )
+    }
+  
 }
 
 
