@@ -15,7 +15,7 @@ import { PaperTemplate } from 'components/body';
 import RegistrationForm from 'components/auth/register'
 import Signup from 'components/auth/signup'
 import Login from 'components/auth/login'
-import AwsUser from 'utils/aws-user';
+import { awsUser } from 'utils/aws-user';
 import EnterCode from './enter-code';
 
 const styles = {
@@ -40,26 +40,36 @@ class LoginPage extends React.Component {
     super(props);
     this.state = {
       email: '',
+      login_email: '',
       password: '',
+      login_password: '',
       password_confirm: '',
       vendor_name: '',
       address: '',
       phone_number: '',
-      error: null,
+      login_error: null,
+      signup_error: null,
       waitForConfirmation: false,
       cognitoUser: null,
       
     };
   }
 
+  async authenticateUser(){
+    const result = await awsUser.AuthenticateUser(this.state.login_email, this.state.login_password)
+      .then((result)=>{
+        console.log("something happened");
+        console.log(result);
+      }).catch((err)=>{ 
+        this.setState({login_error: err});
+      }
+    );
+  }
+
   async signUpUser(){
-    console.log(this.state);
-  
-    let user = new AwsUser();
-  
     if(this.state.password === this.state.password_confirm){
       
-      const result = await user.SignUpUser(
+      const result = await awsUser.SignUpUser(
         this.state.email, 
         this.state.password,
         this.state.address,
@@ -69,23 +79,22 @@ class LoginPage extends React.Component {
         this.setState(
           {
             waitForConfirmation: true,
-            cognitoUser: result.user}
-          );
+            cognitoUser: result.user
+          }
+        );
         console.log(`registered`);
+        
       }).catch((err)=>{ 
-        this.setState({error: err});
+        this.setState({signup_error: err});
       });
       
     } else {
-      this.setState({error: "Passwords don't match"});
+      this.setState({signup_error: "Passwords don't match"});
     }
   }
   
   async confirmUser(){
-    console.log(this.state);
-  
-    let user = new AwsUser();  
-    const result = await user.ConfirmUser(
+    const result = await awsUser.ConfirmUser(
       this.state.cognitoUser, 
       this.state.validation_code
     ).then((result)=>{
@@ -93,7 +102,6 @@ class LoginPage extends React.Component {
     }).catch((err)=>{ 
       console.log(err.code);
     });
-      
   }
 
   // toggleConfirmation(){
@@ -121,7 +129,10 @@ class LoginPage extends React.Component {
 
           : <Grid container alignContent={"center"} justify={"center"} className={classes.root} spacing={16}>
               <Grid item xs={5}>
-                <Login /> 
+                <Login
+                  {...this.state}
+                  authenticateUser={this.authenticateUser.bind(this)}
+                  onChange={this.handleChange.bind(this)}  /> 
               </Grid>
               <Grid item xs={5}>
                 <Signup

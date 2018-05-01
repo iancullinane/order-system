@@ -13,7 +13,7 @@ import Grid from 'material-ui/Grid';
 // Src
 import { PaperTemplate, GridWrapper } from 'components/body';
 import { Paper } from 'material-ui';
-import AwsUser from 'utils/aws-user';
+import { awsUser } from 'utils/aws-user';
 
 const styles = theme => ({
   root: {
@@ -131,9 +131,9 @@ function Signup(props) {
           onClick={props.signUpUser}>
             Register User
         </Button>
-        {props.error 
+        {props.signup_error 
           ? <Typography>
-              {props.error.code}
+              {props.signup_error.code}
             </Typography>
           : null
         }

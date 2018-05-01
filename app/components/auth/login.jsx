@@ -13,8 +13,7 @@ import Grid from 'material-ui/Grid';
 // Src
 import { PaperTemplate, GridWrapper } from 'components/body';
 import { Paper } from 'material-ui';
-import SignUpUser from 'utils/aws-user';
-
+import { awsUser } from 'utils/aws-user';
 
 const styles = theme => ({
   root: {
@@ -43,48 +42,34 @@ const styles = theme => ({
   input: {
     width: "100%",
     marginBottom: "15px",
+  },
+  submitRow: {
+    flexDirection: "row",
   }
+
 });
 
-class Login extends React.Component {
-  
-  constructor(props){
-    super(props);
-    this.state = {
-      email: '',
-      password: '',
-    };
-  };
+var poolData = {
+  UserPoolId : 'us-east-2_SqPWkjFhx', // Your user pool id here
+  ClientId : '5e86924ighs70itck1816rajbi' // Your client id here
+};
 
-  // someFunction(something){};  
+// 
 
+function Login(props) {
+  const { classes } = props;
 
-  printState = () => {
-    console.log(this.state);
-    
-    // console.log(err);
-    // SignUpUser(this.state.email, this.state.password, '781-775-8050')
-  }
-
-  handleChange = prop => event => {
-    this.setState({ [prop]: event.target.value });
-  };
-
-  render(){
-
-    const { classes } = this.props;
-    
-    return (
-      <Paper className={classes.paper}>
+  return (
+    <Paper className={classes.paper}>
         <Typography>
-            Signup
+            Login
         </Typography>
         <Input
           placeholder="Email"
           className={classes.input}
           type={"text"}
-          value={this.state.email}
-          onChange={this.handleChange('email')}
+          value={props.login_email}
+          onChange={props.onChange('login_email')}
           inputProps={{
             'aria-label': 'Description',
           }}
@@ -93,24 +78,29 @@ class Login extends React.Component {
           placeholder="Password"
           className={classes.input}
           type={"password"}
-          value={this.state.password}
-          onChange={this.handleChange('password')}
+          value={props.login_password}
+          onChange={props.onChange('login_password')}
           inputProps={{
             'aria-label': 'Description',
           }}
         />       
-        <div className={classes.center}>
-          <Button 
+        
+        <Button 
           variant="raised" 
           className={classes.button}
-          onClick={this.printState}>
-            Login
-          </Button>
-        </div>
+          onClick={props.authenticateUser}>
+            Register User
+        </Button>
+        {props.login_error 
+          ? <Typography>
+              {props.login_error.code}
+            </Typography>
+          : null
+        }
+        
       </Paper>
-    );
-  }
-}
+  )};
+
 
 Login.propTypes = {
   classes: PropTypes.object.isRequired,
