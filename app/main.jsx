@@ -14,7 +14,7 @@ import LoginPage from 'components/auth/page';
 import SimpleTable from 'components/table';
 
 import "components/styles/styles.scss"
-
+import { awsUser } from 'utils/aws-user';
 
 
 
@@ -23,30 +23,15 @@ class PestoApp extends Component {
     constructor(props){
         super(props);
         this.state = {
-            authorized: this.checkAuth()
+            session: null,
         }
-
-        
-
-        // if(this.props.urlTokens && this.props.urlTokens[0]){
-        //     this.routeRequestToData(this.props.urlTokens);
-        //     return
-        // }
-
-
-        // SignUpUser()
-        // this.initialPageLoad();
     }
 
-    checkAuth(){
-        let check = localStorage.getItem("authed");
-        console.log(check);
-        if(check === null){
-            return false;
-        }
-
-        return true;
+    async componentDidMount() {
+        const authorized = await awsUser.GetSession()
+        this.setState({authorized})
     }
+
     // /**
     // * Route to a view based on urlTokens
     // *
@@ -66,13 +51,12 @@ class PestoApp extends Component {
     // }
 
     render(){
-
-        let loggedIn = localStorage.getItem("loggedin")
-
+        // window.localStorage.clear();
+        // let loggedIn = awsUser.GetSession();
         return(            
             <div id={"root"}>
                 <NavBar />
-                {loggedIn
+                {this.state.authorized
                     ? <SimpleTable />
                     : <LoginPage /> 
                 }

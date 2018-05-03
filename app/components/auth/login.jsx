@@ -89,7 +89,7 @@ function Login(props) {
           variant="raised" 
           className={classes.button}
           onClick={props.authenticateUser}>
-            Register User
+            Login User
         </Button>
         {props.login_error 
           ? <Typography>

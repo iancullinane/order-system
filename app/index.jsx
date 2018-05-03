@@ -56,7 +56,7 @@ function determinePath() {
  * Initiate the charts with data.
  * @name launch
  */
-
+// window.localStorage.clear();
 function launch(urlTokens){
 	ReactDOM.render(
 		<PestoApp urlTokens={urlTokens} />, document.getElementById('root')

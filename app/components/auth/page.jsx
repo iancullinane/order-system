@@ -56,9 +56,10 @@ class LoginPage extends React.Component {
   }
 
   async authenticateUser(){
+    
+    console.log(this.state.login_email, this.state.login_password);
     const result = await awsUser.AuthenticateUser(this.state.login_email, this.state.login_password)
       .then((result)=>{
-        console.log("something happened");
         console.log(result);
       }).catch((err)=>{ 
         this.setState({login_error: err});
@@ -115,6 +116,7 @@ class LoginPage extends React.Component {
   
   render(){
     const { classes } = this.props;
+
     return (
       <div>
         {this.state.waitForConfirmation 

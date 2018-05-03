@@ -17,11 +17,45 @@ class AwsUser {
         this.userPool = new CognitoUserPool(poolData);
     }
 
+    GetSession(){
+        var cognitoUser = this.userPool.getCurrentUser();
+
+
+        return new Promise((resolve, reject)=>{
+            if (cognitoUser != null) {
+                cognitoUser.getSession(function(err, session) {
+                    if (err) {
+                        // alert(err.message || JSON.stringify(err));
+                    }
+                    console.log('session validity: ' + session.isValid());
+                    if(session.isValid()){
+                        resolve(true)
+                    }
+                    
+                })
+            }
+        });
+
+
+
+        if (cognitoUser != null) {
+            cognitoUser.getSession(function(err, session) {
+                if (err) {
+                    // alert(err.message || JSON.stringify(err));
+                }
+                console.log('session validity: ' + session.isValid());
+                return true;
+            })
+        } else {
+            return true;
+        };
+    }
+
     AuthenticateUser(username, password){
 
         var authenticationData = {
-            Username : 'username',
-            Password : 'password',
+            Username : username,
+            Password : password,
         };
         var authenticationDetails = new AuthenticationDetails(authenticationData);
         var poolData = {
@@ -30,41 +64,24 @@ class AwsUser {
         };
 
         var userData = {
-            Username : 'username',
+            Username : username,
             Pool : this.userPool
         };
         var cognitoUser = new CognitoUser(userData);
-        cognitoUser.authenticateUser(authenticationDetails, {
-            onSuccess: function (result) {
-                console.log('access token + ' + result.getAccessToken().getJwtToken());
-    
-                //POTENTIAL: Region needs to be set if not already set previously elsewhere.
-                AWS.config.region = '<region>';
-    
-                AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-                    IdentityPoolId : '...', // your identity pool id here
-                    Logins : {
-                        // Change the key below according to the specific region your user pool is in.
-                        'cognito-idp.<region>.amazonaws.com/<YOUR_USER_POOL_ID>' : result.getIdToken().getJwtToken()
-                    }
-                });
-    
-                //refreshes credentials using AWS.CognitoIdentity.getCredentialsForIdentity()
-                AWS.config.credentials.refresh((error) => {
-                    if (error) {
-                         console.error(error);
-                    } else {
-                         // Instantiate aws sdk service objects now that the credentials have been updated.
-                         // example: var s3 = new AWS.S3();
-                         console.log('Successfully logged!');
-                    }
-                });
-            },
-    
-            onFailure: function(err) {
-                alert(err.message || JSON.stringify(err));
-            },
-    
+
+        return new Promise((resolve, reject)=>{
+            cognitoUser.authenticateUser(authenticationDetails, {
+                onSuccess: function (result) {
+                    console.log('access token + ' + result.getAccessToken().getJwtToken());
+                    location.reload();
+                },
+        
+                onFailure: function(err) {
+                    alert(err.message || JSON.stringify(err));
+                    reject(err);
+                },
+        
+            })
         });
     }
 
