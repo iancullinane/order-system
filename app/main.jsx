@@ -11,7 +11,9 @@ import NavBar from 'components/navbar';
 import SignUpUser from 'utils/aws-user';
 import PaperTemplate from 'components/body';
 import LoginPage from 'components/auth/page';
-import SimpleTable from 'components/table';
+// import SimpleTable from 'components/table';
+import OrderPage from 'components/order/page';
+
 
 import "components/styles/styles.scss"
 import { awsUser } from 'utils/aws-user';
@@ -57,7 +59,7 @@ class PestoApp extends Component {
             <div id={"root"}>
                 <NavBar />
                 {this.state.authorized
-                    ? <SimpleTable />
+                    ? <OrderPage />
                     : <LoginPage /> 
                 }
                 
