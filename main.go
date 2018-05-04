@@ -2,20 +2,21 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
+	// "fmt"
+	"log"
 
-	"github.com/iancullinane/pesto-app/database"
+	"github.com/iancullinane/pesto-app/pesto_db"
 )
 
 func main() {
 
-	db, err := sql.Open("sqlite3", "./foo.db")
+	db, err := sql.Open("sqlite3", "./pesto_db/files/pesto.db")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
 
-	pdb := database.New(db)
+	pdb := pesto_db.New(db)
 
-	fmt.Println(pdb.Test())
+	pdb.Test()
 }
