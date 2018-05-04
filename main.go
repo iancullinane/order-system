@@ -18,5 +18,7 @@ func main() {
 
 	pdb := pesto_db.New(db)
 
+	pdb.Create()
+	pdb.Insert()
 	pdb.Test()
 }

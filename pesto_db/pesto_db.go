@@ -18,34 +18,39 @@ func New(db *sql.DB) *PestoDb {
 	}
 }
 
-func (p *PestoDb) Test() {
-
-	sqlStmt := `
-	create table foo (id integer not null primary key, name text);
-	delete from foo;
-	`
-
-	_, err := p.db.Exec(sqlStmt)
-	if err != nil {
-		log.Printf("%q: %s\n", err, sqlStmt)
-	}
-
+func (p *PestoDb) Insert() error {
 	tx, err := p.db.Begin()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	stmt, err := tx.Prepare("insert into foo(id, name) values(?, ?)")
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer stmt.Close()
 	for i := 0; i < 100; i++ {
 		_, err = stmt.Exec(i, fmt.Sprintf("こんにちわ世界%03d", i))
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 	}
 	tx.Commit()
+	return nil
+}
+
+func (p *PestoDb) Create() error {
+	sqlStmt := `
+	create table foo (id integer not null primary key, name text);
+	delete from foo;
+	`
+	_, err := p.db.Exec(sqlStmt)
+	if err != nil {
+		return (fmt.Errorf("Database creation failure"))
+	}
+	return nil
+}
+
+func (p *PestoDb) Test() {
 
 	rows, err := p.db.Query("select id, name from foo")
 	if err != nil {
@@ -66,7 +71,7 @@ func (p *PestoDb) Test() {
 		log.Fatal(err)
 	}
 
-	stmt, err = p.db.Prepare("select name from foo where id = ?")
+	stmt, err := p.db.Prepare("select name from foo where id = ?")
 	if err != nil {
 		log.Fatal(err)
 	}
