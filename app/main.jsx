@@ -35,24 +35,6 @@ class PestoApp extends Component {
         this.setState({authorized})
     }
 
-    // /**
-    // * Route to a view based on urlTokens
-    // *
-    // * @param {list} urlTokens tokenized list of the current url path
-    // */
-    // routeRequestToData(urlTokens){
-    //     let endpoint = utils.generateApiEndpoint(urlTokens, account.currentAccount.id);
-    //     const pathToFunctionMap = {
-    //         'login':		 () => { console.log(`reource: ${urlTokens[1]}`)  },
-    //         'main_page':	 () => { console.log(`reource: ${urlTokens[1]}`)  },
-
-    //     }	
-        
-    //     try {	
-    //         pathToFunctionMap[urlTokens[0]]();
-    //     } catch(err) { console.log(err); }
-    // }
-
     render(){
         // window.localStorage.clear();
         // let loggedIn = awsUser.GetSession();

@@ -1,7 +1,6 @@
 package server
 
 import (
-	"encoding/json"
 	"flag"
 	"net/http"
 	"os"
@@ -63,20 +62,4 @@ func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request
 	}
 	log.Println("Get Index")
 	return http.HandlerFunc(fn)
-}
-
-func GetUsersHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{
-		"id": "12345",
-		"ts": time.Now().Format(time.RFC3339),
-	}
-
-	log.Println("Get User")
-	b, err := json.Marshal(data)
-	if err != nil {
-		http.Error(w, err.Error(), 400)
-		return
-	}
-
-	w.Write(b)
 }

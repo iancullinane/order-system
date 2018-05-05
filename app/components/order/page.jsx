@@ -13,6 +13,7 @@ import Grid from 'material-ui/Grid';
 // Src
 import { PaperTemplate } from 'components/body';
 import SimpleTable from 'components/order/table';
+import OrderForm from 'components/order/order-form';
 import { awsUser } from 'utils/aws-user';
 
 
@@ -36,6 +37,10 @@ class OrderPage extends React.Component {
   
   constructor(props){
     super(props);
+    this.state = {
+      products: [],
+      item_select: "",
+    }
   }
 
   handleChange = prop => event => {
@@ -49,6 +54,12 @@ class OrderPage extends React.Component {
     return (
       <div>
         <Grid container alignContent={"center"} justify={"center"} className={classes.root} spacing={16}>
+              <Grid item xs={10}>
+                <OrderForm 
+                  {...this.state}
+                  onChange={this.handleChange.bind(this)}
+                />
+              </Grid>
               <Grid item xs={10}>
                 <SimpleTable />
               </Grid>
