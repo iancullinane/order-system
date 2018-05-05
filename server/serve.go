@@ -13,7 +13,11 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func main() {
+type PestoDb interface {
+	GetFromDatabase(w http.ResponseWriter, r *http.Request)
+}
+
+func SetUpServer(pesto_db PestoDb) *http.Server {
 	var entry string
 	var static string
 	var port string
@@ -23,32 +27,34 @@ func main() {
 	flag.StringVar(&port, "port", "8000", "the `port` to listen on.")
 	flag.Parse()
 
-	r := mux.NewRouter()
+	mux := mux.NewRouter()
 
 	// Note: In a larger application, we'd likely extract our route-building logic into our handlers
 	// package, given the coupling between them.
 
 	// It's important that this is before your catch-all route ("/")
-	api := r.PathPrefix("/api/v1/").Subrouter()
-	api.HandleFunc("/users", GetUsersHandler).Methods("GET")
+	api := mux.PathPrefix("/api/v1/").Subrouter()
+
+	api.HandleFunc("/users", pesto_db.GetFromDatabase).Methods("GET")
 	// Optional: Use a custom 404 handler for our API paths.
 	// api.NotFoundHandler = JSONNotFound
 
 	// Serve static assets directly.
-	r.PathPrefix("/dist/").Handler(http.FileServer(http.Dir(static)))
+	mux.PathPrefix("/dist/").Handler(http.FileServer(http.Dir(static)))
 
 	// Catch-all: Serve our JavaScript application's entry-point (index.html).
-	r.PathPrefix("/").HandlerFunc(IndexHandler(entry))
+	mux.PathPrefix("/").HandlerFunc(IndexHandler(entry))
 
 	srv := &http.Server{
-		Handler: handlers.LoggingHandler(os.Stdout, r),
+		Handler: handlers.LoggingHandler(os.Stdout, mux),
 		Addr:    "127.0.0.1:" + port,
 		// Good practice: enforce timeouts for servers you create!
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
 
-	log.Fatal(srv.ListenAndServe())
+	return srv
+	// log.Fatal(srv.ListenAndServe())
 }
 
 func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request) {

@@ -4,12 +4,14 @@ import (
 	"database/sql"
 	// "fmt"
 	"log"
+	"os"
 
 	"github.com/iancullinane/pesto-app/pesto_db"
+	"github.com/iancullinane/pesto-app/server"
 )
 
 func main() {
-
+	os.Remove("./pesto_db/files/pesto.db")
 	db, err := sql.Open("sqlite3", "./pesto_db/files/pesto.db")
 	if err != nil {
 		log.Fatal(err)
@@ -20,5 +22,7 @@ func main() {
 
 	pdb.Create()
 	pdb.Insert()
-	pdb.Test()
+
+	server := server.SetUpServer(pdb)
+	server.ListenAndServe()
 }

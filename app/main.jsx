@@ -27,6 +27,7 @@ class PestoApp extends Component {
         this.state = {
             session: null,
         }
+        console.log("Launch pesto app");
     }
 
     async componentDidMount() {
