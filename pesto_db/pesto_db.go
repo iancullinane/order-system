@@ -26,13 +26,13 @@ func (p *PestoDb) Insert() error {
 		return err
 	}
 	stmt, err := tx.Prepare(
-		"insert into orders(quantity) values(?)",
+		"INSERT INTO vendors [(name, address, contact_email)] VALUES (`test`, ?, `test@email.com`);",
 	)
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		_, err = stmt.Exec(i)
 		if err != nil {
 			return err
@@ -45,11 +45,25 @@ func (p *PestoDb) Insert() error {
 func (p *PestoDb) Create() error {
 	sqlStmt := `
     CREATE TABLE orders (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        quantity INTEGER NULL,
-        created DATE NULL
-    );
-	`
+        id integer PRIMARY KEY AUTOINCREMENT,
+        quantity integer NULL,
+        created date NULL
+	);
+	
+	CREATE TABLE vendors (
+		id integer PRIMARY KEY AUTOINCREMENT,
+		name text NOT NULL,
+		address text NOT NULL,
+		contact_email text NOT NULL,
+		contact_phone text
+	)
+
+	CREATE TABLE products (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name text	NOT NULL,
+		price int NOT NULL,
+		size int
+	);`
 
 	_, err := p.db.Exec(sqlStmt)
 	if err != nil {
