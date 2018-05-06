@@ -38,8 +38,13 @@ class OrderPage extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      products: [],
+      products: [
+        "Pesto 1/2p",
+        "Pesto p" 
+      ],
       item_select: "",
+      name: [],
+      quantity: 0,
     }
   }
 
@@ -47,17 +52,22 @@ class OrderPage extends React.Component {
     this.setState({ [prop]: event.target.value });
     
   };
+
+  handleChangeMulti = prop => event => {
+    this.setState({ name: event.target.value });
+  };
   
   render(){
     const { classes } = this.props;
 
     return (
       <div>
-        <Grid container alignContent={"center"} justify={"center"} className={classes.root} spacing={16}>
+        <Grid container alignContent={"center"} justify={"center"} className={classes.root} spacing={24}>
               <Grid item xs={10}>
                 <OrderForm 
                   {...this.state}
                   onChange={this.handleChange.bind(this)}
+                  onChangeMulti={this.handleChangeMulti.bind(this)}
                 />
               </Grid>
               <Grid item xs={10}>

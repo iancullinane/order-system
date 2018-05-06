@@ -19,37 +19,29 @@ import { Paper } from 'material-ui';
 import { awsUser } from 'utils/aws-user';
 
 const styles = theme => ({
-  root: {
-    marginTop: "75px",
-    flexGrow: 1,
-  },
   flex: {
     flexGrow: 1,
   },
-  column:{
-    width: "33%",
-    marginBottom: "20px",
+  formTitle: {
+    color: "black",
   },
-  center: {
-    display: "flex",
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: "30%",
+    maxWidth: "50%",
+  },
+  formItemSmall: {
+    margin: theme.spacing.unit,
+    width: 120,
   },
   paper: {
+    display: "flex",
+    flexDirection: "column",
     margin: "auto",
     padding: theme.spacing.unit * 2,
     textAlign: 'flex-start',
     color: theme.palette.text.secondary,
-  },
-  input: {
-    width: "50%",
-    marginBottom: "15px",
-  },
-  submitRow: {
-    flexDirection: "row",
   }
-
 });
 
 var poolData = {
@@ -57,71 +49,66 @@ var poolData = {
   ClientId : '5e86924ighs70itck1816rajbi' // Your client id here
 };
 
-const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
-  ];
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
     PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
+        style: {
+          maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+          width: 250,
+        },
     },
-  };
-// 
+};
 
 function OrderForm(props) {
+
   const { classes } = props;
 
   return (
     <Paper className={classes.paper}>
-        <Typography>
-            Order Form
-        </Typography>
-        <InputLabel htmlFor="select-multiple">Name</InputLabel>
+      <Typography 
+        className={classes.formTitle}
+        variant="display1" 
+        gutterBottom>
+          Order Form
+      </Typography>
+      <FormControl className={classes.formControl}>
+        <InputLabel htmlFor="select-product">Product</InputLabel>
         <Select
-            multiple
-            value={props.products}
-            onChange={props.onChange('item_select')}
-            input={<Input id="select-multiple" />}
-            MenuProps={MenuProps}
+          value={props.name}
+          onChange={props.onChangeMulti()}
+          input={<Input id="select-product" />}
+          MenuProps={MenuProps}
         >
-        {names.map(name => (
-            <MenuItem
-                key={name}
-                value={name}
-            >
-            {name}
-            </MenuItem>
-        ))}
+          {props.products.map(product => (
+              <MenuItem
+                  key={product}
+                  value={product}
+              >
+              {product}
+              </MenuItem>
+          ))}
         </Select>
+      </FormControl>
+      
+      <FormControl className={classes.formItemSmall}>
+        <InputLabel htmlFor="quantity">Quantity</InputLabel>
         <Input
           placeholder="Quantity"
-          className={classes.input}
-          type={"password"}
-          value={props.login_password}
-          onChange={props.onChange('login_password')}
+          type={"number"}
+          value={props.quantity}
+          onChange={props.onChange('quantity')}
           inputProps={{
             'aria-label': 'Description',
           }}
         />       
-        
+      </FormControl>
+      <FormControl className={classes.formControl}>
         <Button 
           variant="raised" 
           className={classes.button}
           onClick={props.authenticateUser}>
-            Login User
+            Submit
         </Button>
         {props.login_error 
           ? <Typography>
@@ -129,8 +116,8 @@ function OrderForm(props) {
             </Typography>
           : null
         }
-        
-      </Paper>
+      </FormControl>
+    </Paper>
   )};
 
 
