@@ -57,7 +57,9 @@ const MenuProps = {
     },
 };
 
-function OrderForm(props) {
+
+
+function OrderGroup(props) {
 
   const { classes } = props;
 
@@ -69,64 +71,33 @@ function OrderForm(props) {
         className={classes.formTitle}
         variant="display1" 
         gutterBottom>
-          Order Form
+          Current Order
       </Typography>
-      <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="select-product">Product</InputLabel>
-        {props.products
-          ? <Select
-              value={props.selected_product}
-              onChange={props.onChange("selected_product")}
-              input={<Input id="select-product" />}
-              MenuProps={MenuProps}
-            >
-              {props.products.map(product => (
-                  <MenuItem
-                      key={product.id}
-                      value={product.name}
-                  >
-                  {product.name}
-                  </MenuItem>
-              ))}
-            </Select>
-          : null }
-      </FormControl>
-      
-      <FormControl className={classes.formItemSmall}>
-        <InputLabel htmlFor="quantity">Quantity</InputLabel>
-        <Input
-          placeholder="Quantity"
-          type={"number"}
-          value={props.quantity}
-          onChange={props.onChange('quantity')}
-          inputProps={{
-            'aria-label': 'Description',
-          }}
-        />       
-      </FormControl>
-      <FormControl className={classes.formControl}>
-        <Button 
-          variant="raised" 
-          className={classes.button}
-          onClick={props.addToOrder}>
-            Add to order
-        </Button>
-        {props.login_error 
-          ? <Typography>
-              {props.login_error.code}
-            </Typography>
-          : null
-        }
-      </FormControl>
+      {props.currentOrder.length > 0
+        ? <div>
+            {props.currentOrder.map((v, i) => (
+              <Typography key={i}>
+                {v.name} : {v.quantity}
+              </Typography>
+            ))}
+          </div>
+        : <Typography>Currently empty</Typography>
+      }
+      <Button 
+        variant="raised" 
+        className={classes.button}
+        onClick={props.submitOrder}>
+          Submit Order
+      </Button>
     </Paper>
   )};
 
 
-OrderForm.propTypes = {
+OrderGroup.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(OrderForm);
+export default withStyles(styles)(OrderGroup);
 
 
 

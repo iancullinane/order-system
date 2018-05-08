@@ -14,6 +14,7 @@ import Grid from 'material-ui/Grid';
 import { PaperTemplate } from 'components/body';
 import SimpleTable from 'components/order/table';
 import OrderForm from 'components/order/order-form';
+import OrderGroup from 'components/order/order-group';
 import { awsUser } from 'utils/aws-user';
 
 
@@ -38,14 +39,27 @@ class OrderPage extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      products: [
-        "Pesto 1/2p",
-        "Pesto p" 
-      ],
-      item_select: "",
-      name: [],
+      products: null,
+      current_order: [],
+      selected_product: [],
       quantity: 0,
+      item_select: "",
     }
+  }
+
+  async componentDidMount() {
+    const products = await this.getProducts()
+    this.setState({products})
+  }
+
+  // async function
+  async getProducts() {
+    // await response of fetch call
+    let response = await fetch('http://localhost:8000/api/v1/products');
+    // only proceed once promise is resolved
+    let data = await response.json();
+    // only proceed once second promise is resolved
+    return data;
   }
 
   handleChange = prop => event => {
@@ -53,9 +67,22 @@ class OrderPage extends React.Component {
     
   };
 
-  handleChangeMulti = prop => event => {
-    this.setState({ name: event.target.value });
-  };
+  handleAddToOrder(){
+    let newItem = {
+      name: this.state.selected_product,
+      quantity: this.state.quantity,
+    }
+    let copy = this.state.current_order;
+    copy.push(newItem);
+    console.log(copy);
+    this.setState({
+      current_order: copy
+    })
+  }
+
+  submitOrder(){
+    console.log(this.state.current_order);
+  }
   
   render(){
     const { classes } = this.props;
@@ -63,17 +90,28 @@ class OrderPage extends React.Component {
     return (
       <div>
         <Grid container alignContent={"center"} justify={"center"} className={classes.root} spacing={24}>
-              <Grid item xs={10}>
-                <OrderForm 
-                  {...this.state}
-                  onChange={this.handleChange.bind(this)}
-                  onChangeMulti={this.handleChangeMulti.bind(this)}
-                />
-              </Grid>
-              <Grid item xs={10}>
-                <SimpleTable />
-              </Grid>
-            </Grid>
+          
+          <Grid item md={5} sm={10} >
+            <OrderForm 
+              {...this.state}
+              onChange={this.handleChange.bind(this)}
+              addToOrder={this.handleAddToOrder.bind(this)}
+            />
+          </Grid>
+          
+          <Grid item md={5} sm={10}>
+            <OrderGroup 
+              {...this.state}
+              currentOrder={this.state.current_order}
+              submitOrder={this.submitOrder.bind(this)}
+            />
+          </Grid>
+          
+          <Grid item xs={10}>
+            <SimpleTable />
+          </Grid>
+        
+        </Grid>
       </div>
     );
   }

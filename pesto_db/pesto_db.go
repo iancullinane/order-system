@@ -20,13 +20,65 @@ func New(db *sql.DB) *PestoDb {
 	}
 }
 
-func (p *PestoDb) Insert() error {
+type Order struct {
+	Id       int `json:"id"`
+	Quantity int `json:"quantity"`
+}
+
+func (p *PestoDb) InsertOrders() error {
 	tx, err := p.db.Begin()
 	if err != nil {
 		return err
 	}
 	stmt, err := tx.Prepare(
-		"INSERT INTO vendors [(name, address, contact_email)] VALUES (`test`, ?, `test@email.com`);",
+		"insert into orders(quantity) values(?)",
+	)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	for i := 0; i < 100; i++ {
+		_, err = stmt.Exec(i)
+		if err != nil {
+			return err
+		}
+	}
+	tx.Commit()
+	return nil
+}
+
+func (p *PestoDb) InsertProducts() error {
+
+	sqlStmt := `
+		INSERT INTO products(name, price, size) values('Pesto ½ pint', '6', '8');
+		INSERT INTO products(name, price, size) values('Pesto full pint', '12', '16');
+		INSERT INTO products(name, price, size) values('Ziti', '10', '12');
+	`
+
+	_, err := p.db.Exec(sqlStmt)
+	if err != nil {
+		return (fmt.Errorf("Database creation failure"))
+	}
+
+	// rows, err := p.db.Query("select * from products")
+	// if err != nil {
+	// 	return (fmt.Errorf("Database creation failure"))
+	// }
+
+	// for rows.Next() {
+	// 	fmt.Println(rows)
+	// }
+	return nil
+}
+
+func (p *PestoDb) InsertVendors() error {
+	tx, err := p.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	stmt, err := tx.Prepare(
+		"INSERT INTO vendors(name, address, contact_email) values('test', ?, 'test@email.com');",
 	)
 	if err != nil {
 		return err
@@ -45,9 +97,9 @@ func (p *PestoDb) Insert() error {
 func (p *PestoDb) Create() error {
 	sqlStmt := `
     CREATE TABLE orders (
-        id integer PRIMARY KEY AUTOINCREMENT,
-        quantity integer NULL,
-        created date NULL
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        quantity INTEGER NULL,
+        created DATE NULL
 	);
 	
 	CREATE TABLE vendors (
@@ -55,14 +107,14 @@ func (p *PestoDb) Create() error {
 		name text NOT NULL,
 		address text NOT NULL,
 		contact_email text NOT NULL,
-		contact_phone text
-	)
+		contact_phone text NULL
+	);
 
 	CREATE TABLE products (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name text	NOT NULL,
 		price int NOT NULL,
-		size int
+		size int NULL
 	);`
 
 	_, err := p.db.Exec(sqlStmt)
@@ -72,23 +124,37 @@ func (p *PestoDb) Create() error {
 	return nil
 }
 
-type Order struct {
-	Id       int `json:"id"`
-	Quantity int `json:"quantity"`
+type Product struct {
+	Id    int    `json:"id"`
+	Name  string `json:"name"`
+	Price int    `json:"price"`
+	Size  int    `json:"size"`
 }
 
-func (p *PestoDb) GetFromDatabase(w http.ResponseWriter, r *http.Request) {
+type Vendor struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+}
 
-	rows, err := p.db.Query("select id from orders")
+func (p *PestoDb) GetProducts(w http.ResponseWriter, r *http.Request) {
+
+	rows, err := p.db.Query("select * from products")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
+	var returnV []Product
+	for rows.Next() {
+		var tmp Product
+		err = rows.Scan(&tmp.Id, &tmp.Name, &tmp.Price, &tmp.Size)
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	order := Order{}
-	rows.Scan(&order.Id)
-	// log.Println("Get User")
-	b, err := json.Marshal(order)
+		returnV = append(returnV, tmp)
+	}
+
+	b, err := json.Marshal(returnV)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
@@ -97,32 +163,28 @@ func (p *PestoDb) GetFromDatabase(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
-// 	_, err = db.Exec("delete from foo")
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
+func (p *PestoDb) GetVendors(w http.ResponseWriter, r *http.Request) {
+	rows, err := p.db.Query("select id, name from vendors")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	var returnV []Vendor
+	for rows.Next() {
+		var tmp Vendor
+		err = rows.Scan(&tmp.Id, &tmp.Name)
+		if err != nil {
+			log.Fatal(err)
+		}
+		returnV = append(returnV, tmp)
 
-// 	_, err = db.Exec("insert into foo(id, name) values(1, 'foo'), (2, 'bar'), (3, 'baz')")
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
+	}
 
-// 	rows, err = db.Query("select id, name from foo")
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	defer rows.Close()
-// 	for rows.Next() {
-// 		var id int
-// 		var name string
-// 		err = rows.Scan(&id, &name)
-// 		if err != nil {
-// 			log.Fatal(err)
-// 		}
-// 		fmt.Println(id, name)
-// 	}
-// 	err = rows.Err()
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// }
+	b, err := json.Marshal(returnV)
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
+	w.Write(b)
+}

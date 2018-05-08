@@ -13,7 +13,8 @@ import (
 )
 
 type PestoDb interface {
-	GetFromDatabase(w http.ResponseWriter, r *http.Request)
+	GetVendors(w http.ResponseWriter, r *http.Request)
+	GetProducts(w http.ResponseWriter, r *http.Request)
 }
 
 func SetUpServer(pesto_db PestoDb) *http.Server {
@@ -34,7 +35,8 @@ func SetUpServer(pesto_db PestoDb) *http.Server {
 	// It's important that this is before your catch-all route ("/")
 	api := mux.PathPrefix("/api/v1/").Subrouter()
 
-	api.HandleFunc("/users", pesto_db.GetFromDatabase).Methods("GET")
+	api.HandleFunc("/products", pesto_db.GetProducts).Methods("GET")
+	api.HandleFunc("/vendors", pesto_db.GetVendors).Methods("GET")
 	// Optional: Use a custom 404 handler for our API paths.
 	// api.NotFoundHandler = JSONNotFound
 

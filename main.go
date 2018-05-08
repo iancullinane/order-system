@@ -11,6 +11,9 @@ import (
 )
 
 func main() {
+
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
 	os.Remove("./pesto_db/files/pesto.db")
 	db, err := sql.Open("sqlite3", "./pesto_db/files/pesto.db")
 	if err != nil {
@@ -21,7 +24,9 @@ func main() {
 	pdb := pesto_db.New(db)
 
 	pdb.Create()
-	pdb.Insert()
+	pdb.InsertProducts()
+	pdb.InsertVendors()
+	// pdb.Test()
 
 	server := server.SetUpServer(pdb)
 	server.ListenAndServe()
