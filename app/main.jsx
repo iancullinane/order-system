@@ -10,9 +10,9 @@ import Typography from 'material-ui/Typography';
 import NavBar from 'components/navbar';
 import SignUpUser from 'utils/aws-user';
 import PaperTemplate from 'components/body';
-import LoginPage from 'components/auth/page';
+import LoginPage from 'components/pages/auth-page';
 // import SimpleTable from 'components/table';
-import OrderPage from 'components/order/page';
+import OrderPage from 'components/pages/order-page';
 
 
 import "components/styles/styles.scss"

@@ -17,6 +17,7 @@ import { MenuItem } from 'material-ui/Menu'
 import { PaperTemplate, GridWrapper } from 'components/body';
 import { Paper } from 'material-ui';
 import { awsUser } from 'utils/aws-user';
+import PendingTable from 'components/table/pending-table';
 
 const styles = theme => ({
   flex: {
@@ -73,16 +74,11 @@ function OrderGroup(props) {
         gutterBottom>
           Current Order
       </Typography>
-      {props.currentOrder.length > 0
-        ? <div>
-            {props.currentOrder.map((v, i) => (
-              <Typography key={i}>
-                {v.name} : {v.quantity}
-              </Typography>
-            ))}
-          </div>
-        : <Typography>Currently empty</Typography>
-      }
+
+      <PendingTable
+        currentOrder={props.current_order}
+      />
+
       <Button 
         variant="raised" 
         className={classes.button}

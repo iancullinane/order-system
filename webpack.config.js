@@ -33,7 +33,11 @@ module.exports = {
             query: {
               // If you set something here, also set it in .babelrc
               presets: ['es2016', 'react'],
-              plugins: ['transform-class-properties','syntax-async-functions']
+              plugins: [
+                'transform-class-properties',
+                'syntax-async-functions',
+                'transform-decorators'
+              ]
           }
         }
       }]

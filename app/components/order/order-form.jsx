@@ -91,7 +91,12 @@ function OrderForm(props) {
             </Select>
           : null }
       </FormControl>
-      
+      {props.selected_product.length > 0
+        ? <Typography>
+            Selected
+          </Typography>
+       : null
+      }
       <FormControl className={classes.formItemSmall}>
         <InputLabel htmlFor="quantity">Quantity</InputLabel>
         <Input
@@ -126,7 +131,7 @@ OrderForm.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(OrderForm);
+export default OrderForm;
 
 
 

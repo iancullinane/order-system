@@ -12,7 +12,7 @@ import Grid from 'material-ui/Grid';
 
 // Src
 import { PaperTemplate } from 'components/body';
-import SimpleTable from 'components/order/table';
+import PreviousTable from 'components/table/previous-table.jsx';
 import OrderForm from 'components/order/order-form';
 import OrderGroup from 'components/order/order-group';
 import { awsUser } from 'utils/aws-user';
@@ -74,7 +74,6 @@ class OrderPage extends React.Component {
     }
     let copy = this.state.current_order;
     copy.push(newItem);
-    console.log(copy);
     this.setState({
       current_order: copy
     })
@@ -102,13 +101,12 @@ class OrderPage extends React.Component {
           <Grid item md={5} sm={10}>
             <OrderGroup 
               {...this.state}
-              currentOrder={this.state.current_order}
               submitOrder={this.submitOrder.bind(this)}
             />
           </Grid>
           
           <Grid item xs={10}>
-            <SimpleTable />
+            <PreviousTable currentOrder={[]} />
           </Grid>
         
         </Grid>

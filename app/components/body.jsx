@@ -5,7 +5,7 @@ import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
 
 
-import test_data from 'test/test-data';
+// import test_data from 'test/test-data';
 // import SimpleTable from 'components/table';
 
 const styles = theme => ({

@@ -16,7 +16,7 @@ import RegistrationForm from 'components/auth/register'
 import Signup from 'components/auth/signup'
 import Login from 'components/auth/login'
 import { awsUser } from 'utils/aws-user';
-import EnterCode from './enter-code';
+import EnterCode from 'components/auth/enter-code';
 
 const styles = {
   root: {
