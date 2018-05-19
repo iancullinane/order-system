@@ -18,17 +18,25 @@ const styles = theme => ({
 });
 
 
-var calculateTotal = function(){
-  console.log("do things");
-  return 0
+var calculateTotal = function(arr){
+
+  if (arr.length == 0){
+    return 0;
+  }
+
+  var sum = _.pluck(arr, "quantity");
+  console.log(sum)
+  var total = sum.reduce((a, b)=>{
+    return Number(a) + Number(b);
+  })
+  return total;
 }
 
 
 function PendingOrderTable(props) {
   const { classes } = props;
 
-  var total = calculateTotal()
-  console.log(total);
+  var total = calculateTotal(props.currentOrder)
 
 
   let thisTable = props.currentOrder.map((n, i) => (
