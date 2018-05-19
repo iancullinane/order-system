@@ -16,6 +16,7 @@ import PreviousTable from 'components/table/previous-table.jsx';
 import OrderForm from 'components/order/order-form';
 import OrderGroup from 'components/order/order-group';
 import { awsUser } from 'utils/aws-user';
+import { getProducts } from 'components/data/products';
 
 
 const styles = {
@@ -23,10 +24,6 @@ const styles = {
     flexGrow: 1,
     height: "100%",
     marginTop: "75px",
-  },
-  content: {
-    marginTop: "75px",
-    height: "100%",
   },
   column:{
     width: "33%",
@@ -41,25 +38,15 @@ class OrderPage extends React.Component {
     this.state = {
       products: null,
       current_order: [],
-      selected_product: [],
+      selected_product: "",
       quantity: 0,
       item_select: "",
     }
   }
 
   async componentDidMount() {
-    const products = await this.getProducts()
+    const products = await getProducts()
     this.setState({products})
-  }
-
-  // async function
-  async getProducts() {
-    // await response of fetch call
-    let response = await fetch('http://localhost:8000/api/v1/products');
-    // only proceed once promise is resolved
-    let data = await response.json();
-    // only proceed once second promise is resolved
-    return data;
   }
 
   handleChange = prop => event => {
@@ -80,7 +67,8 @@ class OrderPage extends React.Component {
   }
 
   submitOrder(){
-    console.log(this.state.current_order);
+    console.log(this.state.selected_product);
+    console.log(this.state.products);
   }
   
   render(){
@@ -88,8 +76,14 @@ class OrderPage extends React.Component {
 
     return (
       <div>
-        <Grid container alignContent={"center"} justify={"center"} className={classes.root} spacing={24}>
-          
+        {/* Top level container */}
+        <Grid 
+          container 
+          className={classes.root} 
+          alignContent={"center"} 
+          justify={"center"} 
+          spacing={24}
+        >
           <Grid item md={5} sm={10} >
             <OrderForm 
               {...this.state}

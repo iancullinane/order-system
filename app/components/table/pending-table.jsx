@@ -3,21 +3,33 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Paper from 'material-ui/Paper';
+import _ from 'underscore';
 
 const styles = theme => ({
   root: {
+    display: "flex",
     width: '100%',
     marginTop: theme.spacing.unit * 3,
     overflowX: 'auto',
   },
-  table: {
-    minWidth: 300,
+  pullRight: {
+    textAlign: "right",
   },
 });
 
 
+var calculateTotal = function(){
+  console.log("do things");
+  return 0
+}
+
+
 function PendingOrderTable(props) {
   const { classes } = props;
+
+  var total = calculateTotal()
+  console.log(total);
+
 
   let thisTable = props.currentOrder.map((n, i) => (
         <TableRow key={i}>
@@ -27,10 +39,11 @@ function PendingOrderTable(props) {
       ));
 
   
+
   thisTable.push(
     <TableRow key={"end"}>
       <TableCell>Total</TableCell>
-      <TableCell numeric>100</TableCell>
+      <TableCell className={classes.pullRight}>{total}</TableCell>
     </TableRow>        
   )
 

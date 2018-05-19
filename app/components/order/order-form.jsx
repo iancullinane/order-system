@@ -57,12 +57,17 @@ const MenuProps = {
     },
 };
 
+function itemDetails(name, array){
+  var result = array.filter(function( obj ) {
+    return obj.name == name;
+  });
+  return result.name;
+}
+
 function OrderForm(props) {
 
   const { classes } = props;
-
-
-
+  
   return (
     <Paper className={classes.paper}>
       <Typography 
@@ -91,12 +96,7 @@ function OrderForm(props) {
             </Select>
           : null }
       </FormControl>
-      {props.selected_product.length > 0
-        ? <Typography>
-            Selected
-          </Typography>
-       : null
-      }
+
       <FormControl className={classes.formItemSmall}>
         <InputLabel htmlFor="quantity">Quantity</InputLabel>
         <Input
@@ -109,6 +109,14 @@ function OrderForm(props) {
           }}
         />       
       </FormControl>
+
+      {props.selected_product != ""
+        ? <Typography>
+            {itemDetails(props.selected_product, props.products)}
+          </Typography>
+       : null
+      }      
+
       <FormControl className={classes.formControl}>
         <Button 
           variant="raised" 
@@ -131,7 +139,7 @@ OrderForm.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default OrderForm;
+export default withStyles(styles)(OrderForm);
 
 
 
