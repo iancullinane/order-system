@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Vendor
+import _ from 'underscore';
 import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
@@ -39,6 +40,9 @@ class OrderPage extends React.Component {
       products: null,
       current_order: [],
       selected_product: "",
+      test_product: {
+        name: ""
+      },
       quantity: 0,
       item_select: "",
     }
@@ -50,14 +54,20 @@ class OrderPage extends React.Component {
   }
 
   handleChange = prop => event => {
+    if(prop == "selected_product"){
+      console.log("Updating selected products");
+    }
     this.setState({ [prop]: event.target.value });
-    
   };
 
+  // TODO fix this up
   handleAddToOrder(){
     let newItem = {
-      name: this.state.selected_product,
+      item: _.find(this.state.products,(product)=>{
+        return product.id === this.state.selected_product
+      }),
       quantity: this.state.quantity,
+
     }
     let copy = this.state.current_order;
     copy.push(newItem);

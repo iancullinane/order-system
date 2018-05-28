@@ -57,11 +57,15 @@ const MenuProps = {
     },
 };
 
-function itemDetails(name, array){
+function itemDetails(id, array){
   var result = array.filter(function( obj ) {
-    return obj.name == name;
+    return obj.id == id;
   });
-  return result.name;
+  return (
+    <Typography>
+      {result.name}
+    </Typography>
+  );
 }
 
 function OrderForm(props) {
@@ -74,7 +78,7 @@ function OrderForm(props) {
         className={classes.formTitle}
         variant="display1" 
         gutterBottom>
-          Order Form
+          Order
       </Typography>
       <FormControl className={classes.formControl}>
         <InputLabel htmlFor="select-product">Product</InputLabel>
@@ -88,7 +92,7 @@ function OrderForm(props) {
               {props.products.map(product => (
                   <MenuItem
                       key={product.id}
-                      value={product.name}
+                      value={product.id}
                   >
                   {product.name}
                   </MenuItem>
@@ -111,11 +115,16 @@ function OrderForm(props) {
       </FormControl>
 
       {props.selected_product != ""
+        ? itemDetails(props.selected_product, props.products)
+        : null
+      }      
+
+      {props.test_product.name != ""
         ? <Typography>
-            {itemDetails(props.selected_product, props.products)}
+            {props.test_product.name}
           </Typography>
        : null
-      }      
+      }   
 
       <FormControl className={classes.formControl}>
         <Button 

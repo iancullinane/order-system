@@ -64,8 +64,6 @@ function OrderGroup(props) {
 
   const { classes } = props;
 
-
-
   return (
     <Paper className={classes.paper}>
       <Typography 

@@ -138,6 +138,9 @@ type Vendor struct {
 
 func (p *PestoDb) GetProducts(w http.ResponseWriter, r *http.Request) {
 
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	rows, err := p.db.Query("select * from products")
 	if err != nil {
 		log.Fatal(err)
@@ -164,6 +167,10 @@ func (p *PestoDb) GetProducts(w http.ResponseWriter, r *http.Request) {
 }
 
 func (p *PestoDb) GetVendors(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	rows, err := p.db.Query("select id, name from vendors")
 	if err != nil {
 		log.Fatal(err)
