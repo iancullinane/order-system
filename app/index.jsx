@@ -41,7 +41,7 @@ if (loadedStates.includes(document.readyState) && document.body) {
 function determinePath() {
 	var routes_map = {
 		'/':		 		() => { launch(urlTokens) },
-		'/dist':		 		() => { launch(urlTokens) },
+		'/dist':		 	() => { launch(urlTokens) },
 	}
 	
 	let urlTokens = window.location.pathname.match(/[^\/]+/g);		

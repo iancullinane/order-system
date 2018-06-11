@@ -1,11 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
-import Paper from 'material-ui/Paper';
 import _ from 'underscore';
+import { withStyles } from 'material-ui/styles';
+
+import PropTypes from 'prop-types';
+import Paper from 'material-ui/Paper';
+import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 
 import {CalculateTotal} from "utils/values"
+import { CalculateTax } from '../../utils/values';
 
 const styles = theme => ({
   root: {
@@ -34,26 +36,32 @@ var buildTableBody = function(props){
   
   const { classes } = props;
   
-  let totals = true;
+  const totals = true;
+  const taxable = true;
   let tableData = props.currentOrder;
+
+  let total_quanitity = CalculateTotal(tableData, "quantity");
+  let total_cost = CalculateTotal(tableData, "price");
   
   let thisTable = tableData.map((n, i) => (
     <TableRow key={i}>
       <TableCell>{n.item.name}</TableCell>
       <TableCell numeric>{n.quantity}</TableCell>
-      <TableCell numeric>{n.item.price * n.quantity}</TableCell>
+      <TableCell numeric>${(n.item.price * n.quantity).toFixed(2)}</TableCell>
     </TableRow>        
   ));
 
+  // Make the total row
   totals 
     ? thisTable.push(
         <TableRow key={"end"}>
           <TableCell>Total</TableCell>
-          <TableCell className={classes.pullRight}>{CalculateTotal(tableData, "quantity")}</TableCell>
-          <TableCell className={classes.pullRight}>{CalculateTotal(tableData, "price")}</TableCell>
+          <TableCell className={classes.pullRight}>{total_quanitity}</TableCell>
+          <TableCell className={classes.pullRight}>${total_cost}</TableCell>
         </TableRow>)
     : null ;
-  
+
+
 
   return (
     
@@ -79,7 +87,7 @@ const GenericTable = ({props}) => (
   
   <Table>
     {addHeader()}
-    {buildTableBody(props)}   
+    {buildTableBody(props)} 
   </Table>
 )
 

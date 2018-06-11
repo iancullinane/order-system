@@ -11,7 +11,6 @@ import NavBar from 'components/navbar';
 import SignUpUser from 'utils/aws-user';
 import PaperTemplate from 'components/body';
 import LoginPage from 'components/pages/auth-page';
-// import SimpleTable from 'components/table';
 import OrderPage from 'components/pages/order-page';
 
 

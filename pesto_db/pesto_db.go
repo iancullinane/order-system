@@ -4,9 +4,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"net/http"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type PestoDb struct {
@@ -50,9 +51,9 @@ func (p *PestoDb) InsertOrders() error {
 func (p *PestoDb) InsertProducts() error {
 
 	sqlStmt := `
-		INSERT INTO products(name, price, size) values('Pesto ½ pint', '6', '8');
-		INSERT INTO products(name, price, size) values('Pesto full pint', '12', '16');
-		INSERT INTO products(name, price, size) values('Ziti', '10', '12');
+		INSERT INTO products(name, description, price, size) values('Pesto ½ pint', 'Prepackaged ½ pints of basil pesto in a 8oz container', '6', '8');
+		INSERT INTO products(name, description, price, size) values('Pesto full pint', 'Prepackaged pints of basil pesto in a 16oz container', '12', '16');
+		INSERT INTO products(name, description, price, size) values('Ziti', 'Prepackaged handmade ziti pasta in a 12oz container', '10', '12');
 	`
 
 	_, err := p.db.Exec(sqlStmt)
@@ -113,6 +114,7 @@ func (p *PestoDb) Create() error {
 	CREATE TABLE products (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name text	NOT NULL,
+		description text,
 		price int NOT NULL,
 		size int NULL
 	);`
@@ -125,10 +127,11 @@ func (p *PestoDb) Create() error {
 }
 
 type Product struct {
-	Id    int    `json:"id"`
-	Name  string `json:"name"`
-	Price int    `json:"price"`
-	Size  int    `json:"size"`
+	Id          int    `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Price       int    `json:"price"`
+	Size        int    `json:"size"`
 }
 
 type Vendor struct {
@@ -149,7 +152,7 @@ func (p *PestoDb) GetProducts(w http.ResponseWriter, r *http.Request) {
 	var returnV []Product
 	for rows.Next() {
 		var tmp Product
-		err = rows.Scan(&tmp.Id, &tmp.Name, &tmp.Price, &tmp.Size)
+		err = rows.Scan(&tmp.Id, &tmp.Name, &tmp.Description, &tmp.Price, &tmp.Size)
 		if err != nil {
 			log.Fatal(err)
 		}

@@ -18,6 +18,7 @@ import { PaperTemplate, GridWrapper } from 'components/body';
 import { Paper } from 'material-ui';
 import { awsUser } from 'utils/aws-user';
 
+
 const styles = theme => ({
   flex: {
     flexGrow: 1,
@@ -57,15 +58,47 @@ const MenuProps = {
     },
 };
 
-function itemDetails(id, array){
-  var result = array.filter(function( obj ) {
-    return obj.id == id;
+function itemDetails(props){
+  var result = props.products.filter(function( obj ) {
+    return obj.id == props.selected_product;
   });
+
   return (
-    <Typography>
-      {result.name}
-    </Typography>
+    <div>
+      <Typography variant={"headline"}>
+        {result[0].name} x {props.quantity}
+      </Typography>
+      <Typography variant={"caption"}>
+        Price: ${result[0].price.toFixed(2)}
+      </Typography>
+      <Typography variant={"caption"}>
+        Size: {result[0].size}oz
+      </Typography>
+      <Typography variant={"body1"}>
+        {result[0].description}
+      </Typography>
+    </div>
   );
+}
+
+function generateSelection(props){
+  return (
+    <Select
+      value={props.selected_product}
+      onChange={props.onChange("selected_product")}
+      input={<Input id="select-product" />}
+      MenuProps={MenuProps}
+    >
+      {props.products.map(product => (
+          <MenuItem
+              key={product.id}
+              value={product.id}
+          >
+          {product.name}
+          </MenuItem>
+      ))}
+    </Select>
+  )
 }
 
 function OrderForm(props) {
@@ -83,21 +116,7 @@ function OrderForm(props) {
       <FormControl className={classes.formControl}>
         <InputLabel htmlFor="select-product">Product</InputLabel>
         {props.products
-          ? <Select
-              value={props.selected_product}
-              onChange={props.onChange("selected_product")}
-              input={<Input id="select-product" />}
-              MenuProps={MenuProps}
-            >
-              {props.products.map(product => (
-                  <MenuItem
-                      key={product.id}
-                      value={product.id}
-                  >
-                  {product.name}
-                  </MenuItem>
-              ))}
-            </Select>
+          ? generateSelection(props)
           : null }
       </FormControl>
 
@@ -113,19 +132,16 @@ function OrderForm(props) {
           }}
         />       
       </FormControl>
+          
+      {/* Display the details field for selected item */}
+      <div className={classes.formControl}>
+        {props.selected_product != ""
+          ? itemDetails(props)
+          : null
+        }      
+      </div>
 
-      {props.selected_product != ""
-        ? itemDetails(props.selected_product, props.products)
-        : null
-      }      
-
-      {props.test_product.name != ""
-        ? <Typography>
-            {props.test_product.name}
-          </Typography>
-       : null
-      }   
-
+      {/* Submit button */}
       <FormControl className={classes.formControl}>
         <Button 
           variant="raised" 
@@ -140,6 +156,11 @@ function OrderForm(props) {
           : null
         }
       </FormControl>
+
+      {props.error 
+        ? <Typography>{props.error}</Typography>
+        : null 
+      }
     </Paper>
   )};
 

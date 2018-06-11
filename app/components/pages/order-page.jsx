@@ -53,6 +53,7 @@ class OrderPage extends React.Component {
     this.setState({products})
   }
 
+  // Controlled component handler for all fields
   handleChange = prop => event => {
     if(prop == "selected_product"){
       console.log("Updating selected products");
@@ -62,18 +63,33 @@ class OrderPage extends React.Component {
 
   // TODO fix this up
   handleAddToOrder(){
+    
+    if(this.state.quantity === 0){
+      this.setState({error: "Cannot add zero"});
+      return
+    }
+
+    // Capture the currently selected object and quantity
     let newItem = {
-      item: _.find(this.state.products,(product)=>{
+      item: _.find(this.state.products, (product) => {
         return product.id === this.state.selected_product
       }),
-      quantity: this.state.quantity,
-
+      quantity: Number(this.state.quantity),
     }
+    
     let copy = this.state.current_order;
-    copy.push(newItem);
+    var match = _.find(copy, (obj) => { return obj.item.id === newItem.item.id });
+    
+    if (match) {
+        match.quantity += newItem.quantity;
+    } else {
+      console.log("Not exist");
+      copy.push(newItem);
+    }
+
     this.setState({
       current_order: copy
-    })
+    });
   }
 
   submitOrder(){
@@ -114,6 +130,7 @@ class OrderPage extends React.Component {
           </Grid>
         
         </Grid>
+
       </div>
     );
   }

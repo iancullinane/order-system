@@ -39,6 +39,11 @@ const styles = theme => ({
     padding: theme.spacing.unit * 2,
     textAlign: 'flex-start',
     color: theme.palette.text.secondary,
+  },
+  disclaimer: {
+    marginTop: "5px",
+    marginBottom: "5px",
+    textAlign: "right",
   }
 });
 
@@ -77,12 +82,16 @@ function OrderGroup(props) {
         currentOrder={props.current_order}
       />
 
+
+
       <Button 
         variant="raised" 
         className={classes.button}
         onClick={props.submitOrder}>
           Submit Order
       </Button>
+
+
     </Paper>
   )};
 
