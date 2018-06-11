@@ -83,7 +83,6 @@ class OrderPage extends React.Component {
     if (match) {
         match.quantity += newItem.quantity;
     } else {
-      console.log("Not exist");
       copy.push(newItem);
     }
 

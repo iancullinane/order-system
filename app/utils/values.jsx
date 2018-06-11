@@ -13,16 +13,16 @@ export var CalculateTotal = function(arr, property){
   if (arr.length == 0){
     return 0;
   }
-
-
+  
   if (property === "price"){
-    
+
     _.each(arr, (order)=>{
       quantity = Number.parseInt(order.quantity);
-      price = Number.parseInt(order.item.price) * SALES_TAX;
+      price = Number.parseInt(order.item.price);
       total_price = total_price + (price * quantity);
     })
 
+    total_price = total_price + (total_price * SALES_TAX);
     return total_price.toFixed(2);
   }
 
