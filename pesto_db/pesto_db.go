@@ -21,6 +21,19 @@ func New(db *sql.DB) *PestoDb {
 	}
 }
 
+type Product struct {
+	Id          int    `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Price       int    `json:"price"`
+	Size        int    `json:"size"`
+}
+
+type Vendor struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+}
+
 type Order struct {
 	Id       int `json:"id"`
 	Quantity int `json:"quantity"`
@@ -97,46 +110,28 @@ func (p *PestoDb) InsertVendors() error {
 
 func (p *PestoDb) Create() error {
 	sqlStmt := `
-    CREATE TABLE orders (
-        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        quantity INTEGER NULL,
-        created DATE NULL
-	);
-	
-	CREATE TABLE vendors (
-		id integer PRIMARY KEY AUTOINCREMENT,
-		name text NOT NULL,
-		address text NOT NULL,
-		contact_email text NOT NULL,
-		contact_phone text NULL
-	);
-
 	CREATE TABLE products (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name text	NOT NULL,
 		description text,
 		price int NOT NULL,
 		size int NULL
-	);`
+	);
+
+    CREATE TABLE orders (
+		id INTEGER NOT NULL,
+		FOREIGN KEY(product) REFERENCES products(id)
+        quantity INTEGER NOT NULL,
+        created DATE NULL
+	);
+
+	`
 
 	_, err := p.db.Exec(sqlStmt)
 	if err != nil {
 		return (fmt.Errorf("Database creation failure"))
 	}
 	return nil
-}
-
-type Product struct {
-	Id          int    `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Price       int    `json:"price"`
-	Size        int    `json:"size"`
-}
-
-type Vendor struct {
-	Id   int    `json:"id"`
-	Name string `json:"name"`
 }
 
 func (p *PestoDb) GetProducts(w http.ResponseWriter, r *http.Request) {
@@ -190,6 +185,26 @@ func (p *PestoDb) GetVendors(w http.ResponseWriter, r *http.Request) {
 
 	}
 
+	b, err := json.Marshal(returnV)
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
+	w.Write(b)
+}
+
+func (p *PestoDb) PutOrders(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "PUT")
+	w.Header().Set("Access-Control-Allow-Headers",
+		"Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+
+	returnV := Order{
+		Id:       1,
+		Quantity: 20,
+	}
 	b, err := json.Marshal(returnV)
 	if err != nil {
 		http.Error(w, err.Error(), 400)

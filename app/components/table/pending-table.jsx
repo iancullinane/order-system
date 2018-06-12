@@ -8,6 +8,7 @@ import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Ta
 
 import {CalculateTotal} from "utils/values"
 import { CalculateTax } from '../../utils/values';
+import { SALES_TAX } from 'config/config.js';
 
 const styles = theme => ({
   root: {
@@ -55,7 +56,7 @@ var buildTableBody = function(props){
   totals 
     ? thisTable.push(
         <TableRow key={"end"}>
-          <TableCell>Total</TableCell>
+          <TableCell>Total plus {(SALES_TAX * 100).toFixed(2)}% sales tax</TableCell>
           <TableCell className={classes.pullRight}>{total_quanitity}</TableCell>
           <TableCell className={classes.pullRight}>${total_cost}</TableCell>
         </TableRow>)

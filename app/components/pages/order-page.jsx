@@ -18,6 +18,7 @@ import OrderForm from 'components/order/order-form';
 import OrderGroup from 'components/order/order-group';
 import { awsUser } from 'utils/aws-user';
 import { getProducts } from 'components/data/products';
+import { putOrder } from 'components/data/orders';
 
 
 const styles = {
@@ -91,9 +92,9 @@ class OrderPage extends React.Component {
     });
   }
 
-  submitOrder(){
-    console.log(this.state.selected_product);
-    console.log(this.state.products);
+  async submitOrder(){
+    console.log(this.state.current_order);
+    const orders = await putOrder(this.state.current_order)
   }
   
   render(){
