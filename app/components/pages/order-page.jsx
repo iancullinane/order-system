@@ -94,7 +94,8 @@ class OrderPage extends React.Component {
 
   async submitOrder(){
     console.log(this.state.current_order);
-    const orders = await putOrder(this.state.current_order)
+    let incoming = { payload: this.state.current_order }
+    const orders = await putOrder(incoming)
   }
   
   render(){

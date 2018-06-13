@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -194,12 +195,46 @@ func (p *PestoDb) GetVendors(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
+// func unmarshalResponse(res *http.Response) (*Response, error) {
+// 	if err := parseHTTPError(res); err != nil {
+// 		return nil, err
+// 	}
+
+// 	var ret Response
+// 	dec := json.NewDecoder(res.Body)
+// 	if err := dec.Decode(&ret); err != nil {
+// 		return nil, errors.Wrap(err, "error decoding response")
+// 	}
+
+// 	return &ret, nil
+// }
+
 func (p *PestoDb) PutOrders(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "PUT")
 	w.Header().Set("Access-Control-Allow-Headers",
 		"Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+
+	if r.Method == "OPTIONS" {
+		fmt.Println("Handle options")
+		return
+	}
+
+	var val map[string]interface{}
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Printf("error decoding request: %s\n", err)
+	}
+
+	fmt.Println(body)
+	err = json.Unmarshal(body, &val)
+	if err != nil {
+		fmt.Printf("error decoding: %s\n", err)
+	}
+
+	log.Println(val)
 
 	returnV := Order{
 		Id:       1,
@@ -208,7 +243,6 @@ func (p *PestoDb) PutOrders(w http.ResponseWriter, r *http.Request) {
 	b, err := json.Marshal(returnV)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
-		return
 	}
 
 	w.Write(b)
