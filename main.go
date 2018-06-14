@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	// "fmt"
 	"log"
 	"os"
@@ -23,7 +24,10 @@ func main() {
 
 	pdb := pesto_db.New(db)
 
-	pdb.Create()
+	err = pdb.Create()
+	if err != nil {
+		fmt.Printf("Error creating database: %s\n", err)
+	}
 	pdb.InsertProducts()
 	pdb.InsertVendors()
 	// pdb.Test()

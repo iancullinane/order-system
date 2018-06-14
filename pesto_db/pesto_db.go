@@ -75,14 +75,6 @@ func (p *PestoDb) InsertProducts() error {
 		return (fmt.Errorf("Database creation failure"))
 	}
 
-	// rows, err := p.db.Query("select * from products")
-	// if err != nil {
-	// 	return (fmt.Errorf("Database creation failure"))
-	// }
-
-	// for rows.Next() {
-	// 	fmt.Println(rows)
-	// }
 	return nil
 }
 
@@ -121,7 +113,7 @@ func (p *PestoDb) Create() error {
 
     CREATE TABLE orders (
 		id INTEGER NOT NULL,
-		FOREIGN KEY(product) REFERENCES products(id)
+		product_id FOREIGN KEY(product) REFERENCES products(id)
         quantity INTEGER NOT NULL,
         created DATE NULL
 	);
@@ -130,7 +122,7 @@ func (p *PestoDb) Create() error {
 
 	_, err := p.db.Exec(sqlStmt)
 	if err != nil {
-		return (fmt.Errorf("Database creation failure"))
+		return fmt.Errorf("Failed at %s", err)
 	}
 	return nil
 }
@@ -228,7 +220,6 @@ func (p *PestoDb) PutOrders(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("error decoding request: %s\n", err)
 	}
 
-	fmt.Println(body)
 	err = json.Unmarshal(body, &val)
 	if err != nil {
 		fmt.Printf("error decoding: %s\n", err)
