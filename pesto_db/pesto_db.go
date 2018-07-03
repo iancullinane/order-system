@@ -110,14 +110,6 @@ func (p *PestoDb) Create() error {
 		price int NOT NULL,
 		size int NULL
 	);
-
-    CREATE TABLE orders (
-		id INTEGER NOT NULL,
-		product_id FOREIGN KEY(product) REFERENCES products(id)
-        quantity INTEGER NOT NULL,
-        created DATE NULL
-	);
-
 	`
 
 	_, err := p.db.Exec(sqlStmt)

@@ -2,11 +2,10 @@ package server
 
 import (
 	"flag"
+	"fmt"
 	"net/http"
 	"os"
 	"time"
-
-	"log"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -25,7 +24,7 @@ func SetUpServer(pesto_db PestoDb) *http.Server {
 
 	flag.StringVar(&entry, "entry", "./dist/index.html", "the entrypoint to serve.")
 	flag.StringVar(&static, "dist", ".", "the directory to serve static files from.")
-	flag.StringVar(&port, "port", "8000", "the `port` to listen on.")
+	flag.StringVar(&port, "port", "5003", "the `port` to listen on.")
 	flag.Parse()
 
 	mux := mux.NewRouter()
@@ -49,6 +48,8 @@ func SetUpServer(pesto_db PestoDb) *http.Server {
 	// Catch-all: Serve our JavaScript application's entry-point (index.html).
 	mux.PathPrefix("/").HandlerFunc(IndexHandler(entry))
 
+	fmt.Printf("Starting server on port %s\n", port)
+
 	srv := &http.Server{
 		Handler: handlers.LoggingHandler(os.Stdout, mux),
 		Addr:    "127.0.0.1:" + port,
@@ -65,6 +66,5 @@ func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, entrypoint)
 	}
-	log.Println("Get Index")
 	return http.HandlerFunc(fn)
 }

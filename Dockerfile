@@ -1,16 +1,22 @@
-FROM alpine:3.4
+FROM golang
 
-RUN apk --no-cache add bash go make
+EXPOSE 5003
 
-RUN mkdir -p /go/src /go/bin && chmod -R 777 /go
+# RUN apk --no-cache add git bash go make gcc sqlite
+RUN mkdir -p /go/src /go/pkg /go/bin && chmod -R 777 /go
+
+# ENV GOROOT /usr/lib/go
 ENV GOPATH /go
-ENV PATH /go/bin:$PATH
+ENV PATH $GOPATH/bin:$PATH
 
-ADD dist/* /usr/src/app
-ADD sweet-basil-pesto-dev /usr/src/app
+ADD Makefile /usr/src/app/Makefile
+ADD dist/ /usr/src/app
+ADD output/sweet-basil-pesto-dev /usr/src/app
+ADD pesto_db/files/pesto.db /usr/src/app/pesto_db/files/
+ADD dist/ /usr/src/app/dist/
 
 WORKDIR /usr/src/app
 
-CMD ["make", "run"]
-
+# ENTRYPOINT ["./output/sweet-basil-pesto-dev"]
+CMD ["./sweet-basil-pesto-dev"]
 

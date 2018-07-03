@@ -10,15 +10,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@material-ui/core": "^1.2.1",
     "amazon-cognito-identity-js": "^2.0.3",
     "aws-amplify": "^0.3.0",
     "aws-sdk": "^2.224.1",
-    "material-ui": "^1.0.0",
-    "react": "^16.2.0",
+    "material-ui": "@material-ui/core",
+    "react": "^16.3.0",
     "react-cookie": "^2.1.4",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.3.0",
+    "react-event-listener": "^16.3.0"
   },
   "devDependencies": {
+    "@material-ui/icons": "^0.20.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-syntax-async-functions": "^6.13.0",
@@ -29,7 +32,6 @@
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^0.28.11",
     "html-webpack-plugin": "^2.30.1",
-    "material-ui-icons": "^1.0.0-beta.36",
     "node-sass": "^4.7.2",
     "react-cookies": "^0.1.0",
     "react-hot-loader": "^3.1.3",

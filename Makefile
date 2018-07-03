@@ -18,14 +18,20 @@ all: clean
 	@echo "${IMAGE_NAME} Was created from project ${NAME}"
 
 
-build: 
-	go build -o $(NAME)
+go-build: 
+	go build -o output/$(NAME)
 
 run: go-build
-	$(NAME)
+	./${NAME}
 
-run-docker:
-	docker run --expose $(PORT) -p $(PORT):$(PORT) $(IMAGE_NAME) 
+docker-build: 
+	docker build -t build-container -f Dockerfile.build .
+	docker run -v ${pwd}/:/go/src/github.com/iancullinane/pesto-app build-container
+	
+
+run-docker: docker-build
+	docker build -t $(IMAGE_NAME) .
+	docker run -p $(PORT):$(PORT) $(IMAGE_NAME) 
 
 install: node_modules
 
@@ -36,7 +42,7 @@ webpack:
 clean:
 	@echo "Cleaning..."
 	@-rm -r node_modules
-	@-rm -r dist
+	# @-rm -r dist
 	@-rm $(NAME)
 
 node_modules:
