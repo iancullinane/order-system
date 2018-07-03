@@ -25,8 +25,8 @@ run: go-build
 	./${NAME}
 
 docker-build: 
-	docker build -t build-container -f Dockerfile.build .
-	docker run -v ${pwd}/:/go/src/github.com/iancullinane/pesto-app build-container
+	docker build --no-cache -t build-container -f Dockerfile.build .
+	docker run -v ${CURDIR}/:/go/src/github.com/iancullinane/pesto-app build-container
 	
 
 run-docker: docker-build
