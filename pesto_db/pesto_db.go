@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -35,39 +34,34 @@ type Vendor struct {
 	Name string `json:"name"`
 }
 
-type Order struct {
-	Id       int `json:"id"`
-	Quantity int `json:"quantity"`
-}
-
-func (p *PestoDb) InsertOrders() error {
-	tx, err := p.db.Begin()
-	if err != nil {
-		return err
-	}
-	stmt, err := tx.Prepare(
-		"insert into orders(quantity) values(?)",
-	)
-	if err != nil {
-		return err
-	}
-	defer stmt.Close()
-	for i := 0; i < 100; i++ {
-		_, err = stmt.Exec(i)
-		if err != nil {
-			return err
-		}
-	}
-	tx.Commit()
-	return nil
+type OrderMap struct {
+	OrdNum    int `json:"order_number"`
+	ProductId int `json:"product_id"`
+	Quantity  int `json:"quantity"`
 }
 
 func (p *PestoDb) InsertProducts() error {
 
 	sqlStmt := `
-		INSERT INTO products(name, description, price, size) values('Pesto ½ pint', 'Prepackaged ½ pints of basil pesto in a 8oz container', '6', '8');
-		INSERT INTO products(name, description, price, size) values('Pesto full pint', 'Prepackaged pints of basil pesto in a 16oz container', '12', '16');
-		INSERT INTO products(name, description, price, size) values('Ziti', 'Prepackaged handmade ziti pasta in a 12oz container', '10', '12');
+		INSERT INTO product(name, description, price, size) values('Pesto ½ pint', 'Prepackaged ½ pints of basil pesto in a 8oz container', '6', '8');
+		INSERT INTO product(name, description, price, size) values('Pesto full pint', 'Prepackaged pints of basil pesto in a 16oz container', '12', '16');
+		INSERT INTO product(name, description, price, size) values('Ziti', 'Prepackaged handmade ziti pasta in a 12oz container', '10', '12');
+	`
+
+	_, err := p.db.Exec(sqlStmt)
+	if err != nil {
+		return (fmt.Errorf("Database creation failure"))
+	}
+
+	return nil
+}
+
+func (p *PestoDb) InsertOrders() error {
+
+	sqlStmt := `
+		INSERT INTO order_map(order_number, quantity, product_id) values(1, 10, 1);
+		INSERT INTO order_map(order_number, quantity, product_id) values(1, 10, 2);
+		INSERT INTO order_map(order_number, quantity, product_id) values(1, 10, 3);
 	`
 
 	_, err := p.db.Exec(sqlStmt)
@@ -100,10 +94,9 @@ func (p *PestoDb) InsertVendors() error {
 	tx.Commit()
 	return nil
 }
-
-func (p *PestoDb) Create() error {
+func (p *PestoDb) CreateProductTable() error {
 	sqlStmt := `
-	CREATE TABLE products (
+	CREATE TABLE product (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name text	NOT NULL,
 		description text,
@@ -119,12 +112,37 @@ func (p *PestoDb) Create() error {
 	return nil
 }
 
+func (p *PestoDb) CreateOrderTable() error {
+	sqlStmt := `
+	CREATE TABLE order_map (
+		order_number INTEGER NOT NULL,
+		quantity INTEGER NOT NULL,
+		product_id INTEGER NOT NULL,
+
+		CONSTRAINT product_id_fk FOREIGN KEY (product_id) REFERENCES product (id)
+	);
+	`
+
+	_, err := p.db.Exec(sqlStmt)
+	if err != nil {
+		return fmt.Errorf("%s", err)
+	}
+	return nil
+}
+
+func (p *PestoDb) CreateAllTables() error {
+	err := p.CreateProductTable()
+	err = p.CreateOrderTable()
+
+	return err
+}
+
 func (p *PestoDb) GetProducts(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
-	rows, err := p.db.Query("select * from products")
+	rows, err := p.db.Query("select * from product")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -154,7 +172,7 @@ func (p *PestoDb) GetVendors(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
-	rows, err := p.db.Query("select id, name from vendors")
+	rows, err := p.db.Query("select id, name from vendor")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -193,40 +211,74 @@ func (p *PestoDb) GetVendors(w http.ResponseWriter, r *http.Request) {
 // 	return &ret, nil
 // }
 
-func (p *PestoDb) PutOrders(w http.ResponseWriter, r *http.Request) {
+func (p *PestoDb) OrderHandler(w http.ResponseWriter, r *http.Request) {
 
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "PUT")
-	w.Header().Set("Access-Control-Allow-Headers",
-		"Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	// w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	// w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if r.Method == "OPTIONS" {
 		fmt.Println("Handle options")
 		return
 	}
 
-	var val map[string]interface{}
+	if r.Method == "GET" {
+		rows, err := p.db.Query("select * from order_map")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer rows.Close()
+		var returnV []OrderMap
+		for rows.Next() {
+			var tmp OrderMap
+			err = rows.Scan(&tmp.OrdNum, &tmp.Quantity, &tmp.ProductId)
+			if err != nil {
+				log.Fatal(err)
+			}
+			returnV = append(returnV, tmp)
 
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		fmt.Printf("error decoding request: %s\n", err)
+		}
+
+		b, err := json.Marshal(returnV)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+
+		w.Write(b)
 	}
 
-	err = json.Unmarshal(body, &val)
-	if err != nil {
-		fmt.Printf("error decoding: %s\n", err)
-	}
+	// w.Header().Set("Access-Control-Allow-Origin", "*")
+	// w.Header().Set("Access-Control-Allow-Methods", "PUT")
+	// w.Header().Set("Access-Control-Allow-Headers",
+	// 	"Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 
-	log.Println(val)
+	// if r.Method == "OPTIONS" {
+	// 	fmt.Println("Handle options")
+	// 	return
+	// }
 
-	returnV := Order{
-		Id:       1,
-		Quantity: 20,
-	}
-	b, err := json.Marshal(returnV)
-	if err != nil {
-		http.Error(w, err.Error(), 400)
-	}
+	// var val map[string]interface{}
 
-	w.Write(b)
+	// body, err := ioutil.ReadAll(r.Body)
+	// if err != nil {
+	// 	fmt.Printf("error decoding request: %s\n", err)
+	// }
+
+	// err = json.Unmarshal(body, &val)
+	// if err != nil {
+	// 	fmt.Printf("error decoding: %s\n", err)
+	// }
+
+	// log.Println(val)
+
+	// returnV := Order{
+	// 	Id:       1,
+	// 	Quantity: 20,
+	// }
+	// b, err := json.Marshal(returnV)
+	// if err != nil {
+	// 	http.Error(w, err.Error(), 400)
+	// }
+
+	// w.Write(b)
 }

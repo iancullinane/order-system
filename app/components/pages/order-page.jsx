@@ -51,6 +51,7 @@ class OrderPage extends React.Component {
 
   async componentDidMount() {
     const products = await getProducts()
+    const orders = await getOrders()
     this.setState({products})
   }
 

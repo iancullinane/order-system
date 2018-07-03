@@ -14,7 +14,7 @@ import (
 type PestoDb interface {
 	GetVendors(w http.ResponseWriter, r *http.Request)
 	GetProducts(w http.ResponseWriter, r *http.Request)
-	PutOrders(w http.ResponseWriter, r *http.Request)
+	OrderHandler(w http.ResponseWriter, r *http.Request)
 }
 
 func SetUpServer(pesto_db PestoDb) *http.Server {
@@ -38,7 +38,7 @@ func SetUpServer(pesto_db PestoDb) *http.Server {
 
 	api.HandleFunc("/products", pesto_db.GetProducts).Methods("GET")
 	api.HandleFunc("/vendors", pesto_db.GetVendors).Methods("GET")
-	api.HandleFunc("/orders", pesto_db.PutOrders).Methods("PUT", "OPTIONS")
+	api.HandleFunc("/orders", pesto_db.OrderHandler).Methods("GET", "PUT", "OPTIONS")
 	// Optional: Use a custom 404 handler for our API paths.
 	// api.NotFoundHandler = JSONNotFound
 
