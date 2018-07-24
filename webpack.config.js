@@ -6,9 +6,19 @@ const webpack = require('webpack');
 module.exports = {
   entry: './app/index.jsx',
   devtool: 'source-map',
+  output: {
+    filename: '[name].bundle.js',
+    path: path.resolve(__dirname, 'public'),
+    publicPath: 'public'
+  },
   watch: true,
   devServer: {
-    contentBase: './dist/',
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+    },
+    contentBase: './public/',
     hot: true
   },
   resolve: {
@@ -19,11 +29,18 @@ module.exports = {
     extensions: ['.js', '.jsx']
   },
   module:{
-    loaders:[{
-        test:/\.scss$/,
-        // the are used in reverse order, output of sass-loader->css-loader->
-        // stlye->loader injects it into the html
-        use:['style-loader','css-loader', 'sass-loader']
+    loaders:[
+      // {
+      //   test:/\.scss$/,
+      //   // the are used in reverse order, output of sass-loader->css-loader->
+      //   // stlye->loader injects it into the html
+      //   use:['style-loader','css-loader', 'sass-loader']
+      // },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: [
+          'file-loader'
+        ]
       },
       {
         test: /\.jsx?$/,
@@ -43,7 +60,7 @@ module.exports = {
       }]
   },
   plugins: [
-    // new CleanWebpackPlugin(['dist']),
+    new CleanWebpackPlugin(['dist'], {exclude: ['index.html','main.bundle.js','main.bundle.js.map']}),
     new HtmlWebpackPlugin({
       title: 'Pesto',
       template: './app/index-template.html',
@@ -52,9 +69,4 @@ module.exports = {
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin()
   ],
-  output: {
-    filename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: 'dist'
-  }
 };

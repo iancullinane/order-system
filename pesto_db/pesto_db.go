@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -62,6 +63,8 @@ func (p *PestoDb) InsertOrders() error {
 		INSERT INTO order_map(order_number, quantity, product_id) values(1, 10, 1);
 		INSERT INTO order_map(order_number, quantity, product_id) values(1, 10, 2);
 		INSERT INTO order_map(order_number, quantity, product_id) values(1, 10, 3);
+		INSERT INTO order_map(order_number, quantity, product_id) values(2, 10, 1);
+		INSERT INTO order_map(order_number, quantity, product_id) values(2, 10, 2);
 	`
 
 	_, err := p.db.Exec(sqlStmt)
@@ -213,8 +216,8 @@ func (p *PestoDb) GetVendors(w http.ResponseWriter, r *http.Request) {
 
 func (p *PestoDb) OrderHandler(w http.ResponseWriter, r *http.Request) {
 
-	// w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	// w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if r.Method == "OPTIONS" {
 		fmt.Println("Handle options")
@@ -247,38 +250,40 @@ func (p *PestoDb) OrderHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(b)
 	}
 
-	// w.Header().Set("Access-Control-Allow-Origin", "*")
-	// w.Header().Set("Access-Control-Allow-Methods", "PUT")
-	// w.Header().Set("Access-Control-Allow-Headers",
-	// 	"Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	if r.Method == "PUT" {
 
-	// if r.Method == "OPTIONS" {
-	// 	fmt.Println("Handle options")
-	// 	return
-	// }
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "PUT")
+		w.Header().Set("Access-Control-Allow-Headers",
+			"Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 
-	// var val map[string]interface{}
+		if r.Method == "OPTIONS" {
+			fmt.Println("Handle options")
+			return
+		}
 
-	// body, err := ioutil.ReadAll(r.Body)
-	// if err != nil {
-	// 	fmt.Printf("error decoding request: %s\n", err)
-	// }
+		var val map[string]interface{}
 
-	// err = json.Unmarshal(body, &val)
-	// if err != nil {
-	// 	fmt.Printf("error decoding: %s\n", err)
-	// }
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			fmt.Printf("error decoding request: %s\n", err)
+		}
 
-	// log.Println(val)
+		err = json.Unmarshal(body, &val)
+		if err != nil {
+			fmt.Printf("error decoding: %s\n", err)
+		}
 
-	// returnV := Order{
-	// 	Id:       1,
-	// 	Quantity: 20,
-	// }
-	// b, err := json.Marshal(returnV)
-	// if err != nil {
-	// 	http.Error(w, err.Error(), 400)
-	// }
+		returnV := OrderMap{
+			OrdNum:    1,
+			ProductId: 1,
+			Quantity:  20,
+		}
+		b, err := json.Marshal(returnV)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+		}
 
-	// w.Write(b)
+		w.Write(b)
+	}
 }

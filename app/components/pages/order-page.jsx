@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 
 // Vendor
 import _ from 'underscore';
-import { withStyles } from 'material-ui/styles';
-import Typography from 'material-ui/Typography';
-import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
-import { FormControl } from 'material-ui/Form';
-import TextField from 'material-ui/TextField';
-import Grid from 'material-ui/Grid';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Input, { InputLabel, InputAdornment } from '@material-ui/core/Input';
+import FormControl from '@material-ui/core/FormControl';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
 
 
 // Src
@@ -18,7 +18,7 @@ import OrderForm from 'components/order/order-form';
 import OrderGroup from 'components/order/order-group';
 import { awsUser } from 'utils/aws-user';
 import { getProducts } from 'components/data/products';
-import { putOrder } from 'components/data/orders';
+import { putOrder, getOrders } from 'components/data/orders';
 
 
 const styles = {
@@ -39,20 +39,21 @@ class OrderPage extends React.Component {
     super(props);
     this.state = {
       products: null,
+      orders: null,
       current_order: [],
       selected_product: "",
       test_product: {
         name: ""
       },
       quantity: 0,
-      item_select: "",
     }
   }
 
   async componentDidMount() {
     const products = await getProducts()
     const orders = await getOrders()
-    this.setState({products})
+
+    this.setState({products, orders})
   }
 
   // Controlled component handler for all fields
@@ -64,7 +65,7 @@ class OrderPage extends React.Component {
   };
 
   // TODO fix this up
-  handleAddToOrder(){
+  addToPending(){
     
     if(this.state.quantity === 0){
       this.setState({error: "Cannot add zero"});
@@ -116,7 +117,7 @@ class OrderPage extends React.Component {
             <OrderForm 
               {...this.state}
               onChange={this.handleChange.bind(this)}
-              addToOrder={this.handleAddToOrder.bind(this)}
+              addToPending={this.addToPending.bind(this)}
             />
           </Grid>
           
@@ -127,9 +128,13 @@ class OrderPage extends React.Component {
             />
           </Grid>
           
-          <Grid item xs={10}>
-            <PreviousTable currentOrder={[]} />
-          </Grid>
+          {this.state.orders
+            ? <Grid item xs={10}>
+                <PreviousTable previousOrders={_.groupBy(this.state.orders, "order_number")} />
+              </Grid>
+            : null 
+          }
+          
         
         </Grid>
 

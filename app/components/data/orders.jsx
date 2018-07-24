@@ -5,7 +5,7 @@ export async function putOrder(data) {
     console.log(data);
     let request = await fetch('http://localhost:5003/api/v1/orders', {
         method: 'PUT',
-        mode: 'cors',
+        mode: 'no-cors',
         body: JSON.stringify(data),
     });
     // only proceed once second promise is resolved

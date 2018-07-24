@@ -1,12 +1,15 @@
 import React from 'react';
 import _ from 'underscore';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
 import PropTypes from 'prop-types';
-import Paper from 'material-ui/Paper';
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
-
-import {CalculateTotal} from "utils/values"
+import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead'; 
+import TableRow from '@material-ui/core/TableRow';
+import { CalculateTotal } from "utils/values"
 import { CalculateTax } from '../../utils/values';
 import { SALES_TAX } from 'config/config.js';
 
