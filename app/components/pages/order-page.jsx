@@ -4,19 +4,13 @@ import PropTypes from 'prop-types';
 // Vendor
 import _ from 'underscore';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Input, { InputLabel, InputAdornment } from '@material-ui/core/Input';
 import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 
-
 // Src
-import { PaperTemplate } from 'components/body';
 import PreviousTable from 'components/table/previous-table.jsx';
 import OrderForm from 'components/order/order-form';
-import OrderGroup from 'components/order/order-group';
-import { awsUser } from 'utils/aws-user';
+import PendingOrder from 'components/order/pending-order';
 import { getProducts } from 'components/data/products';
 import { putOrder, getOrders } from 'components/data/orders';
 
@@ -33,6 +27,32 @@ const styles = {
   },
 };
 
+
+var test = [
+  {
+    "item": {
+      "id": 1,
+      "name": "Pesto ½ pint",
+      "description": "Prepackaged ½ pints of basil pesto in a 8oz container",
+      "price": 6,
+      "size": 8
+    },
+    "quantity": 5
+  },
+  {
+    "item": {
+      "id": 3,
+      "name": "Ziti",
+      "description": "Prepackaged handmade ziti pasta in a 12oz container",
+      "price": 10,
+      "size": 12
+    },
+    "quantity": 10
+  }
+]
+
+
+
 class OrderPage extends React.Component {
   
   constructor(props){
@@ -40,11 +60,8 @@ class OrderPage extends React.Component {
     this.state = {
       products: null,
       orders: null,
-      current_order: [],
+      current_order: test,
       selected_product: "",
-      test_product: {
-        name: ""
-      },
       quantity: 0,
     }
   }
@@ -122,7 +139,7 @@ class OrderPage extends React.Component {
           </Grid>
           
           <Grid item md={5} sm={10}>
-            <OrderGroup 
+            <PendingOrder
               {...this.state}
               submitOrder={this.submitOrder.bind(this)}
             />
