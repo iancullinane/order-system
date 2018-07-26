@@ -30,12 +30,6 @@ module.exports = {
   },
   module:{
     loaders:[
-      // {
-      //   test:/\.scss$/,
-      //   // the are used in reverse order, output of sass-loader->css-loader->
-      //   // stlye->loader injects it into the html
-      //   use:['style-loader','css-loader', 'sass-loader']
-      // },
       {
         test: /\.(png|svg|jpg|gif)$/,
         use: [
