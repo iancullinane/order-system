@@ -18,7 +18,8 @@ import MenuItem from '@material-ui/core/MenuItem'
 import { PaperTemplate, GridWrapper } from 'components/body';
 import Paper  from '@material-ui/core/Paper';
 import { awsUser } from 'utils/aws-user';
-import PendingTable from 'components/table/pending-table';
+
+import GenericTable from 'components/table/table';
 
 const styles = theme => ({
   flex: {
@@ -48,11 +49,6 @@ const styles = theme => ({
   }
 });
 
-var poolData = {
-  UserPoolId : 'us-east-2_SqPWkjFhx', // Your user pool id here
-  ClientId : '5e86924ighs70itck1816rajbi' // Your client id here
-};
-
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -66,7 +62,7 @@ const MenuProps = {
 
 
 
-function OrderGroup(props) {
+function PendingOrder(props) {
 
   const { classes } = props;
 
@@ -79,11 +75,9 @@ function OrderGroup(props) {
           Current Order
       </Typography>
 
-      <PendingTable
+      <GenericTable
         currentOrder={props.current_order}
       />
-
-
 
       <Button 
         variant="raised" 
@@ -97,11 +91,11 @@ function OrderGroup(props) {
   )};
 
 
-OrderGroup.propTypes = {
+PendingOrder.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(OrderGroup);
+export default withStyles(styles)(PendingOrder);
 
 
 
