@@ -1,5 +1,11 @@
+.DS_Store
+.vscode/
 node_modules/
-blank
-serve
+public/
 **/*.map
 dist/*
+blank
+serve
+ba.sh
+yarn.lock
+go-scratch.go
