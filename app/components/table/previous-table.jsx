@@ -68,7 +68,7 @@ function PreviousOrderTable(props) {
         </TableHead> 
         <TableBody>
           {thisTable}
-        </TableBody>        
+        </TableBody>
       </Table>
     </Paper>
   );

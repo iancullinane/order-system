@@ -11,7 +11,7 @@ import NavBar from 'components/navbar';
 import SignUpUser from 'utils/aws-user';
 import PaperTemplate from 'components/body';
 import LoginPage from 'components/pages/auth-page';
-import OrderPage from 'components/pages/order-page';
+import MainPage from 'components/pages/main-page';
 
 
 // import "components/styles/styles.scss"
@@ -52,6 +52,9 @@ class PestoApp extends Component {
         this.state = {
             session: null,
         }
+
+        // TODO::thread url tokens for page generation
+        console.log(props.urlTokens)
         console.log("Launch pesto app");
     }
 
@@ -61,13 +64,14 @@ class PestoApp extends Component {
     }
 
     render(){
+        
         // window.localStorage.clear();
         // let loggedIn = awsUser.GetSession();
         return(            
             <div id={"root"}>
                 <NavBar />
                 {this.state.authorized
-                    ? <OrderPage />
+                    ? <MainPage />
                     : <LoginPage /> 
                 }
                 

@@ -1,24 +1,24 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+// const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = {
   entry: './app/index.jsx',
   devtool: 'source-map',
+  mode: 'development',
   output: {
     filename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'public'),
-    publicPath: 'public'
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: 'dist/'
   },
-  watch: true,
   devServer: {
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
       "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
     },
-    contentBase: './public/',
+    contentBase: 'dist/',
     hot: true
   },
   resolve: {
@@ -29,9 +29,15 @@ module.exports = {
     extensions: ['.js', '.jsx']
   },
   module:{
-    loaders:[
+    rules:[      
       {
-        test: /\.(png|svg|jpg|gif)$/,
+        test:/\.css$/,
+        // the are used in reverse order, output of sass-loader->css-loader->
+        // stlye->loader injects it into the html
+        use:['style-loader','css-loader', 'sass-loader']
+      },
+      {
+        test: /\.(png|svg|jpg|gif|otf)$/,
         use: [
           'file-loader'
         ]
@@ -43,18 +49,17 @@ module.exports = {
             loader: 'babel-loader',
             query: {
               // If you set something here, also set it in .babelrc
-              presets: ['es2016', 'react'],
+              presets: ['@babel/preset-env', '@babel/preset-react'],
               plugins: [
                 'transform-class-properties',
-                'syntax-async-functions',
-                'transform-decorators'
+                'syntax-async-functions'
               ]
           }
         }
       }]
   },
   plugins: [
-    new CleanWebpackPlugin(['dist'], {exclude: ['index.html','main.bundle.js','main.bundle.js.map']}),
+    // new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
       title: 'Pesto',
       template: './app/index-template.html',

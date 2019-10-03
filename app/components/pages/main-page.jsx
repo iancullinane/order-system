@@ -53,14 +53,14 @@ var test = [
 
 
 
-class OrderPage extends React.Component {
+class MainPage extends React.Component {
   
   constructor(props){
     super(props);
     this.state = {
       products: null,
       orders: null,
-      current_order: test,
+      current_order: [],
       selected_product: "",
       quantity: 0,
     }
@@ -160,11 +160,9 @@ class OrderPage extends React.Component {
   }
 }
 
-OrderPage.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
-export default withStyles(styles)(OrderPage);
+
+export default withStyles(styles)(MainPage);
 
 
 

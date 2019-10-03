@@ -8,8 +8,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/iancullinane/pesto-app/pesto_db"
 	"github.com/iancullinane/pesto-app/server"
+	"github.com/iancullinane/pesto-app/server/pesto_db"
 )
 
 func main() {

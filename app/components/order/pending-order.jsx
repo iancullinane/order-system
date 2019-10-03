@@ -72,7 +72,7 @@ function PendingOrder(props) {
         className={classes.formTitle}
         variant="display1" 
         gutterBottom>
-          Current Order
+          Pending Order
       </Typography>
 
       <GenericTable

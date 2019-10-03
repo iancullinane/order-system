@@ -8,14 +8,12 @@ ENV GOPATH /go
 ENV PATH $GOPATH/bin:$PATH
 
 ADD Makefile /go/src/github.com/iancullinane/pesto-app/Makefile
-ADD main.go /go/src/github.com/iancullinane/pesto-app/main.go
 ADD server/ /go/src/github.com/iancullinane/pesto-app/server/
-ADD pesto_db/ /go/src/github.com/iancullinane/pesto-app/pesto_db/
 
 WORKDIR /go/src/github.com/iancullinane/pesto-app
 
 # CMD ["ls", "-la"]
-RUN go get ./...
+RUN ["go", "get", "./..."]
 RUN go install ./...
 CMD ["make", "go-build"]
 

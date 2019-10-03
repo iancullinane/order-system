@@ -17,15 +17,26 @@ all: clean
 		-t ${IMAGE_NAME} .
 	@echo "${IMAGE_NAME} Was created from project ${NAME}"
 
-
+# 
+#  Go Stuff
+# _________
 go-build: 
 	go build -o output/$(NAME)
 
-run: go-build
+go-get:
+	go get ./...
+
+go-run: go-build
 	./${NAME}
 
+# go-get:
+
+# 
+#  Docker stuff
+# ___________
+
 docker-build: 
-	docker build --no-cache -t build-container -f Dockerfile.build .
+	docker build -t build-container -f Dockerfile.build .
 	docker run -v ${CURDIR}/:/go/src/github.com/iancullinane/pesto-app build-container
 	
 

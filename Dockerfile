@@ -12,7 +12,7 @@ ENV PATH $GOPATH/bin:$PATH
 ADD Makefile /usr/src/app/Makefile
 ADD dist/ /usr/src/app
 ADD output/sweet-basil-pesto-dev /usr/src/app
-ADD pesto_db/files/pesto.db /usr/src/app/pesto_db/files/
+ADD server/pesto_db/files/pesto.db /usr/src/app/pesto_db/files/
 ADD dist/ /usr/src/app/dist/
 
 WORKDIR /usr/src/app

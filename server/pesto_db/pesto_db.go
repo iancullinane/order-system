@@ -59,18 +59,18 @@ func (p *PestoDb) InsertProducts() error {
 
 func (p *PestoDb) InsertOrders() error {
 
-	sqlStmt := `
-		INSERT INTO order_map(order_number, quantity, product_id) values(1, 10, 1);
-		INSERT INTO order_map(order_number, quantity, product_id) values(1, 10, 2);
-		INSERT INTO order_map(order_number, quantity, product_id) values(1, 10, 3);
-		INSERT INTO order_map(order_number, quantity, product_id) values(2, 10, 1);
-		INSERT INTO order_map(order_number, quantity, product_id) values(2, 10, 2);
-	`
+	// sqlStmt := `
+	// 	INSERT INTO order_map(order_number, quantity, product_id) values(1, 10, 1);
+	// 	INSERT INTO order_map(order_number, quantity, product_id) values(1, 10, 2);
+	// 	INSERT INTO order_map(order_number, quantity, product_id) values(1, 10, 3);
+	// 	INSERT INTO order_map(order_number, quantity, product_id) values(2, 10, 1);
+	// 	INSERT INTO order_map(order_number, quantity, product_id) values(2, 10, 2);
+	// `
 
-	_, err := p.db.Exec(sqlStmt)
-	if err != nil {
-		return (fmt.Errorf("Database creation failure"))
-	}
+	// _, err := p.db.Exec(sqlStmt)
+	// if err != nil {
+	// 	return (fmt.Errorf("Database creation failure"))
+	// }
 
 	return nil
 }
