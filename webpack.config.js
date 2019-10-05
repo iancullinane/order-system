@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = {
-  entry: './app/index.jsx',
+  entry: ['@babel/polyfill', './app/index.jsx'],
   devtool: 'source-map',
   mode: 'development',
   output: {

@@ -55,6 +55,7 @@ class LoginPage extends React.Component {
     };
   }
 
+
   async authenticateUser(){
     
     console.log(this.state.login_email, this.state.login_password);

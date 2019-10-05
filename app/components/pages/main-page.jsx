@@ -122,6 +122,7 @@ class MainPage extends React.Component {
 
     return (
       <div>
+        {/* <h1>Hello</h1> */}
         {/* Top level container */}
         <Grid 
           container 
