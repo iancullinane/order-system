@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/pkg/errors"
 )
 
 type PestoDb struct {
@@ -98,6 +99,7 @@ func (p *PestoDb) InsertVendors() error {
 	return nil
 }
 func (p *PestoDb) CreateProductTable() error {
+
 	sqlStmt := `
 	CREATE TABLE product (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -110,8 +112,9 @@ func (p *PestoDb) CreateProductTable() error {
 
 	_, err := p.db.Exec(sqlStmt)
 	if err != nil {
-		return fmt.Errorf("Failed at %s", err)
+		return errors.Wrapf(err, "Failed at:")
 	}
+
 	return nil
 }
 
