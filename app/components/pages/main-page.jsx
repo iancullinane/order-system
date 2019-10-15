@@ -3,22 +3,16 @@ import PropTypes from 'prop-types';
 
 // Vendor
 import _ from 'underscore';
-import { withStyles } from 'material-ui/styles';
-import Typography from 'material-ui/Typography';
-import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
-import { FormControl } from 'material-ui/Form';
-import TextField from 'material-ui/TextField';
-import Grid from 'material-ui/Grid';
-
+import { withStyles } from '@material-ui/core/styles';
+import FormControl from '@material-ui/core/FormControl';
+import Grid from '@material-ui/core/Grid';
 
 // Src
-import { PaperTemplate } from 'components/body';
 import PreviousTable from 'components/table/previous-table.jsx';
 import OrderForm from 'components/order/order-form';
-import OrderGroup from 'components/order/order-group';
-import { awsUser } from 'utils/aws-user';
+import PendingOrder from 'components/order/pending-order';
 import { getProducts } from 'components/data/products';
-import { putOrder } from 'components/data/orders';
+import { putOrder, getOrders } from 'components/data/orders';
 
 
 const styles = {
@@ -33,25 +27,50 @@ const styles = {
   },
 };
 
-class OrderPage extends React.Component {
+
+var test = [
+  {
+    "item": {
+      "id": 1,
+      "name": "Pesto ½ pint",
+      "description": "Prepackaged ½ pints of basil pesto in a 8oz container",
+      "price": 6,
+      "size": 8
+    },
+    "quantity": 5
+  },
+  {
+    "item": {
+      "id": 3,
+      "name": "Ziti",
+      "description": "Prepackaged handmade ziti pasta in a 12oz container",
+      "price": 10,
+      "size": 12
+    },
+    "quantity": 10
+  }
+]
+
+
+
+class MainPage extends React.Component {
   
   constructor(props){
     super(props);
     this.state = {
       products: null,
+      orders: null,
       current_order: [],
       selected_product: "",
-      test_product: {
-        name: ""
-      },
       quantity: 0,
-      item_select: "",
     }
   }
 
   async componentDidMount() {
     const products = await getProducts()
-    this.setState({products})
+    const orders = await getOrders()
+
+    this.setState({products, orders})
   }
 
   // Controlled component handler for all fields
@@ -63,7 +82,7 @@ class OrderPage extends React.Component {
   };
 
   // TODO fix this up
-  handleAddToOrder(){
+  addToPending(){
     
     if(this.state.quantity === 0){
       this.setState({error: "Cannot add zero"});
@@ -103,6 +122,7 @@ class OrderPage extends React.Component {
 
     return (
       <div>
+        {/* <h1>Hello</h1> */}
         {/* Top level container */}
         <Grid 
           container 
@@ -115,20 +135,24 @@ class OrderPage extends React.Component {
             <OrderForm 
               {...this.state}
               onChange={this.handleChange.bind(this)}
-              addToOrder={this.handleAddToOrder.bind(this)}
+              addToPending={this.addToPending.bind(this)}
             />
           </Grid>
           
           <Grid item md={5} sm={10}>
-            <OrderGroup 
+            <PendingOrder
               {...this.state}
               submitOrder={this.submitOrder.bind(this)}
             />
           </Grid>
           
-          <Grid item xs={10}>
-            <PreviousTable currentOrder={[]} />
-          </Grid>
+          {this.state.orders
+            ? <Grid item xs={10}>
+                <PreviousTable previousOrders={_.groupBy(this.state.orders, "order_number")} />
+              </Grid>
+            : null 
+          }
+          
         
         </Grid>
 
@@ -137,11 +161,9 @@ class OrderPage extends React.Component {
   }
 }
 
-OrderPage.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
-export default withStyles(styles)(OrderPage);
+
+export default withStyles(styles)(MainPage);
 
 
 

@@ -1,14 +1,24 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+// const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = {
-  entry: './app/index.jsx',
+  entry: ['@babel/polyfill', './app/index.jsx'],
   devtool: 'source-map',
-  watch: true,
+  mode: 'development',
+  output: {
+    filename: '[name].bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: 'dist/'
+  },
   devServer: {
-    contentBase: './dist/',
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+    },
+    contentBase: 'dist/',
     hot: true
   },
   resolve: {
@@ -19,11 +29,18 @@ module.exports = {
     extensions: ['.js', '.jsx']
   },
   module:{
-    loaders:[{
-        test:/\.scss$/,
+    rules:[      
+      {
+        test:/\.css$/,
         // the are used in reverse order, output of sass-loader->css-loader->
         // stlye->loader injects it into the html
         use:['style-loader','css-loader', 'sass-loader']
+      },
+      {
+        test: /\.(png|svg|jpg|gif|otf)$/,
+        use: [
+          'file-loader'
+        ]
       },
       {
         test: /\.jsx?$/,
@@ -32,11 +49,10 @@ module.exports = {
             loader: 'babel-loader',
             query: {
               // If you set something here, also set it in .babelrc
-              presets: ['es2016', 'react'],
+              presets: ['@babel/preset-env', '@babel/preset-react'],
               plugins: [
                 'transform-class-properties',
-                'syntax-async-functions',
-                'transform-decorators'
+                'syntax-async-functions'
               ]
           }
         }
@@ -52,9 +68,4 @@ module.exports = {
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin()
   ],
-  output: {
-    filename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: 'dist'
-  }
 };

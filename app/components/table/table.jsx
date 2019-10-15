@@ -1,12 +1,15 @@
 import React from 'react';
 import _ from 'underscore';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
 import PropTypes from 'prop-types';
-import Paper from 'material-ui/Paper';
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
-
-import {CalculateTotal} from "utils/values"
+import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead'; 
+import TableRow from '@material-ui/core/TableRow';
+import { CalculateTotal } from "utils/values"
 import { CalculateTax } from '../../utils/values';
 import { SALES_TAX } from 'config/config.js';
 
@@ -31,37 +34,48 @@ var buildTable = function(props){
 }
 
 
+var createTableRow = function(index, rowData){
+  
+  return (
+    <TableRow key={index}>
+      <TableCell>{rowData.item.name}</TableCell>
+      <TableCell numeric>{rowData.quantity}</TableCell>
+      <TableCell numeric>${(rowData.item.price * rowData.quantity).toFixed(2)}</TableCell>
+    </TableRow> 
+  )
+}
+
+var addTotalRow = function(thisTable, tableData){
+  
+  const totals = true;
+  const taxable = true;
+
+  let total_quanitity = CalculateTotal(tableData, "quantity");
+  let total_cost = CalculateTotal(tableData, "price");
+
+    // // Make the total row
+  totals 
+    ? thisTable.push(
+        <TableRow key={"end"}>
+          <TableCell>Total plus {(SALES_TAX * 100).toFixed(2)}% sales tax</TableCell>
+          <TableCell numeric>{total_quanitity}</TableCell>
+          <TableCell numeric>${total_cost}</TableCell>
+        </TableRow>)
+    : null ;
+}
+
 
 var buildTableBody = function(props){
 
   
   const { classes } = props;
   
-  const totals = true;
-  const taxable = true;
   let tableData = props.currentOrder;
 
-  let total_quanitity = CalculateTotal(tableData, "quantity");
-  let total_cost = CalculateTotal(tableData, "price");
-  
-  let thisTable = tableData.map((n, i) => (
-    <TableRow key={i}>
-      <TableCell>{n.item.name}</TableCell>
-      <TableCell numeric>{n.quantity}</TableCell>
-      <TableCell numeric>${(n.item.price * n.quantity).toFixed(2)}</TableCell>
-    </TableRow>        
-  ));
-
-  // Make the total row
-  totals 
-    ? thisTable.push(
-        <TableRow key={"end"}>
-          <TableCell>Total plus {(SALES_TAX * 100).toFixed(2)}% sales tax</TableCell>
-          <TableCell className={classes.pullRight}>{total_quanitity}</TableCell>
-          <TableCell className={classes.pullRight}>${total_cost}</TableCell>
-        </TableRow>)
-    : null ;
-
+  let thisTable = tableData.map((n, i) => 
+    createTableRow(i, n)  
+  );
+  addTotalRow(thisTable, tableData);
 
 
   return (
@@ -73,6 +87,7 @@ var buildTableBody = function(props){
 }
 
 var addHeader = function(){
+
   return(
     <TableHead>
       <TableRow>
@@ -84,29 +99,32 @@ var addHeader = function(){
   )
 }
 
-const GenericTable = ({props}) => (
-  
+const MakeTable = ({props}) => (
   <Table>
     {addHeader()}
     {buildTableBody(props)} 
   </Table>
 )
 
+function extractHeaders(currentOrder){
+  console.log(currentOrder)
+}
 
 
-
-function PendingOrderTable(props) {
+function GenericTable(props) {
   const { classes } = props;
   
+  extractHeaders(props.currentOrder)
+
   return (
     <Paper className={classes.root}>
-      <GenericTable props={props} />
+      <MakeTable props={props} />
     </Paper>
   );
 }
 
-PendingOrderTable.propTypes = {
+GenericTable.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PendingOrderTable);
+export default withStyles(styles)(GenericTable);

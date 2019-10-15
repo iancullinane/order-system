@@ -2,12 +2,13 @@ package main
 
 import (
 	"database/sql"
-	// "fmt"
-	"log"
 	"os"
 
-	"github.com/iancullinane/pesto-app/pesto_db"
+	// "fmt"
+	"log"
+
 	"github.com/iancullinane/pesto-app/server"
+	"github.com/iancullinane/pesto-app/server/pesto_db"
 )
 
 func main() {
@@ -15,7 +16,7 @@ func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	os.Remove("./pesto_db/files/pesto.db")
-	db, err := sql.Open("sqlite3", "./pesto_db/files/pesto.db")
+	db, err := sql.Open("sqlite3", "./pesto.db")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -23,9 +24,12 @@ func main() {
 
 	pdb := pesto_db.New(db)
 
-	pdb.Create()
+	err = pdb.CreateAllTables()
+	if err != nil {
+		log.Print(err)
+	}
 	pdb.InsertProducts()
-	pdb.InsertVendors()
+	pdb.InsertOrders()
 	// pdb.Test()
 
 	server := server.SetUpServer(pdb)

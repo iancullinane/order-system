@@ -2,17 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Vendor
-import { withStyles } from 'material-ui/styles';
-import Typography from 'material-ui/Typography';
-import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
-import { FormControl } from 'material-ui/Form';
-import TextField from 'material-ui/TextField';
-import Grid from 'material-ui/Grid';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Input, { InputLabel, InputAdornment } from '@material-ui/core/Input';
+import FormControl from '@material-ui/core/FormControl';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
 
 
 // Src
 import { PaperTemplate } from 'components/body';
-import RegistrationForm from 'components/auth/register'
+import RegistrationForm from 'components/auth/register';
 import Signup from 'components/auth/signup'
 import Login from 'components/auth/login'
 import { awsUser } from 'utils/aws-user';
@@ -54,6 +54,7 @@ class LoginPage extends React.Component {
       
     };
   }
+
 
   async authenticateUser(){
     

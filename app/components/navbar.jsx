@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
-import Icon from 'material-ui/Icon';
-// import MenuIcon from '@material-ui/icons/Menu';
+import { withStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import Icon from '@material-ui/core/Icon';
+// import MenuIcon from '@@material-ui/core/icons/Menu';
 
 
-const styles = {
+const styles = theme => ({
   root: {
     flexGrow: 1,
   },
@@ -24,7 +24,7 @@ const styles = {
     marginLeft: -12,
     marginRight: 20,
   },
-};
+});
 
 function NavBar(props) {
   const { classes } = props;
@@ -36,7 +36,7 @@ function NavBar(props) {
                 home
             </Icon>
           </IconButton>
-          <Typography variant="title" color="inherit" className={classes.flex}>
+          <Typography variant="h5" color="inherit" className={classes.flex}>
             Pesto App
           </Typography>
           <Button color="inherit">Login</Button>
